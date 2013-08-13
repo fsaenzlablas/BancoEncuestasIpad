@@ -1,0 +1,4 @@
+include_once("../encuestas/class/FourDimensionAccess.php");
+
+
+<!--#4dvar wtxtIP-->

@@ -1,0 +1,42 @@
+
+
+
+.myfields  .myfields input {
+  display:inline-block;
+}
+
+.myfields label {
+  width:50px; /* or whatever size you want them */
+}
+
+
+#select_choice_peso {
+float:left;
+}
+
+#select_choice_pesounidad {
+float:left;
+width:50px;
+background:#fc0;
+}
+
+label{
+	float:left;
+	
+}
+select {
+	font-size:200%;/*2em*/
+	background:#FFFFF0;/*#fc0;*/
+	height : 200%;/*40px*/
+	float:left	;
+	border-radius : 15px;
+	-moz-border-radius: 15px;
+}
+
+#menu ul{
+  list-style: none;
+}
+
+#menu li{
+  display: inline;
+}
