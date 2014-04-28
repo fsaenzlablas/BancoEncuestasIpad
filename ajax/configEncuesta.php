@@ -1,5 +1,9 @@
 <?php
 
+//@session_start();//29 oct 2013
+//no empieza la sesion aqui 
+//8 de marzo de 2014
+
 // ------------------------------------------------------------------------
 // Programa: configEncuesta.php
 //
@@ -7,8 +11,10 @@
 // los arreglos de SESSION que permitiran grabar la encuesta
 // ------------------------------------------------------------------------
 
+
+
 if (isset($_POST['num_ot'])) {
-    $num_ot = $_POST['num_ot'];
+    $num_ot = trim($_POST['num_ot']);//15 nov
 
     if (isset($_POST['cod_bact'])) {
         $cod_bact = $_POST['cod_bact'];
@@ -21,6 +27,41 @@ if (isset($_POST['num_ot'])) {
         $cod_bact = $_SESSION[$num_ot]['cod_bact'];
         $nom_bact = $_SESSION[$num_ot]['nom_bact'];
     }
+
+}
+
+$_SESSION[$num_ot]['encOtDon'] = $num_ot;//12 de noviembre
+
+
+
+//$_SESSION["tipo_encuesta"] 30 de diciembre 2013
+if (isset($_POST['tipoEncuesta'])) {
+ 
+ //   if   ( 0) {//$_SESSION['tipo_encuesta'] != $_POST['tipoEncuesta'])
+    if   (0){
+
+
+
+         unset ($_SESSION[$num_ot]['codigos_pre']);
+         unset ($_SESSION[$num_ot]['secuencias'] );
+         unset ($_SESSION[$num_ot]['descripciones'] );
+
+         unset ($_SESSION[$num_ot]['tipos'] );
+         unset ($_SESSION[$num_ot]['tipos_sig'] );
+         unset ($_SESSION[$num_ot]['cod_sig']);
+
+         unset ($_SESSION[$num_ot]['resperadas']);
+         unset ($_SESSION[$num_ot]['criticidades'] );
+
+         unset ($_SESSION[$num_ot]['selecciones']);
+         unset ($_SESSION[$num_ot]['sexo'] );
+
+         unset ($_SESSION[$num_ot]['rdonante'] );// Respuesta del donante, se inicializa en blancos
+         unset ($_SESSION[$num_ot]['objresp'] ); // Objeto en HTML que contiene la respuesta
+    } 
+   $_SESSION['tipo_encuesta'] = $_POST['tipoEncuesta']; 
+
+
 
 }
 
@@ -54,9 +95,23 @@ $db = new ezSQL_mysql(EZSQL_DB_USER, EZSQL_DB_PASSWORD, EZSQL_DB_NAME, EZSQL_DB_
 // respectivo
 // ------------------------------------------------------------------------
 
-$sexo = $_SESSION[$num_ot]['encSexDonante'] == 'F' ? 'FE' : 'MA';
-//$sql = "SELECT * FROM banco_encuesta WHERE activa=1 AND sexo IN ('AM', '$sexo') AND (codigo%2=1) ORDER BY secuencia ASC;";
+mysql_set_charset('utf8');//11 de dic 2013
 
+$sexo = "AM";
+$sqlGenero = "SELECT * FROM banco_registro r  WHERE r.Nro_Consecutivo = '$num_ot' ";
+$recGenero = $db->get_row($sqlGenero);
+
+if ( isset($recGenero->Sexo)) {
+  $sexo= $recGenero->Sexo; 
+}
+$sexo = $sexo == 'F' ? 'FE' : 'MA';
+//$sexo = $_SESSION[$num_ot]['encSexDonante'] == 'F' ? 'FE' : 'MA';
+//$sexo = $_SESSION["GeneroDonante"]== 'Masculino' ? 'MA' : 'FE';
+
+
+
+//$sql = "SELECT * FROM banco_encuesta WHERE activa=1 AND sexo IN ('AM', '$sexo') AND (codigo%2=1) ORDER BY secuencia ASC;";
+$prefijoEncuesta = "";
 
 $tipoenconfigencuesta = intval($_SESSION["tipo_encuesta"]) ;
 $sql = "SELECT * FROM banco_encuesta WHERE activa=1 AND sexo IN ('AM', '$sexo') AND postdonacion = $tipoenconfigencuesta   ORDER BY secuencia ASC;";
@@ -75,7 +130,26 @@ if ($preguntas = $db->get_results($sql, ARRAY_A)) {
 
         array_push($codigos, $pregunta['codigo']);
         array_push($secuencias, $pregunta['secuencia']);
-        array_push($descripciones, htmlentities($pregunta['descripcion'], ENT_COMPAT));
+         
+      //  $vDesPregunta = htmlentities($pregunta['descripcion'], ENT_COMPAT,"UTF-8");
+
+      //  array_push($descripciones, htmlentities($pregunta['descripcion'], ENT_COMPAT));
+ //array_push($descripciones, $pregunta['descripcion']);
+
+ //      array_push($descripciones, htmlentities($pregunta['descripcion'], ENT_SUBSTITUTE));
+
+        //Algunos caracteres no aparecen .
+
+        
+
+       // $vDesPregunta = htmlentities($pregunta['descripcion'], ENT_SUBSTITUTE);//"UTF-8");
+           $vDesPregunta = htmlentities($pregunta['descripcion'], ENT_COMPAT);
+  //  $vDesPregunta = htmlentities($pregunta['descripcion'], ENT_QUOTES | ENT_SUBSTITUTE);//"UTF-8");
+      //     var $preg = $pregunta['descripcion'];
+      //     $preg= str_replace("Ñ","&Ntilde;");
+ //$vDesPregunta = htmlentities($preg, ENT_QUOTES | ENT_SUBSTITUTE);//"UTF-8");
+
+      array_push($descripciones, $vDesPregunta);
 
         array_push($tipos, $pregunta['tipo']);
         array_push($resperada, $pregunta['respuesta_esp']);
@@ -204,6 +278,30 @@ $_SESSION[$num_ot]['cod_bact'] = $cod_bact;
 $_SESSION[$num_ot]['nom_bact'] = $nom_bact;
 
 
+//12 de noviembre
+   $sql = "SELECT * FROM banco_registro r  WHERE r.Nro_Consecutivo = '$num_ot' ";
+    $rec = $db->get_row($sql);
+
+    $vEstadoEncuesta ="PE";
+    
+  if ( isset($rec->Nombre)) {//if (isset($rec->Nombre)) {
+        $donante =$num_ot ;
+        $_SESSION[$donante]['encOtDon'] = $donante;
+        $_SESSION[$donante]['encCCDon'] = $rec->Cedula;
+
+        $_SESSION[$donante]['encNombreDon'] = $rec->Nombre;
+        $_SESSION[$donante]['encApellido1Don'] = $rec->Apellido1;
+        $_SESSION[$donante]['encApellido2Don'] = $rec->Apellido2;
+        $_SESSION[$donante]['encReceptor'] = $rec->Receptor;
+        $_SESSION[$donante]['encSexDonante'] = $rec->Sexo;
+        $_SESSION[$donante]['cod_bact'] = $rec->Bacteriologa;
+        $vEstadoEncuesta=$rec->Encuesta ;
+        if ($vEstadoEncuesta != ""){
+            $prefijoEncuesta = "-";
+        }
+}
+
+//echo $prefijoEncuesta+$num_ot;//13 nov
 ?>
 
 

@@ -12,6 +12,8 @@ $codigos_bact=array();
 $nombres_bact=array();
 
 include_once("../class/class.PopUp.php");
+//include_once("../class/class.PopUpSelect.php");
+
 include_once "../lib/shared/ez_sql_core.php";
 include_once("../lib/ez_sql_mysql.php");
 $db = new ezSQL_mysql(EZSQL_DB_USER, EZSQL_DB_PASSWORD, EZSQL_DB_NAME, EZSQL_DB_HOST);
@@ -20,6 +22,8 @@ $sql = "SELECT * FROM banco_bacteriologas WHERE tipo='Bacteriologa' ORDER BY nom
 
 /*dump($sql);
 die("ACABE2");*/
+       array_push($codigos_bact, '');
+        array_push($nombres_bact, '');
 
 if ($users = $db->get_results($sql, ARRAY_A)) {
     foreach ($users as $user) {
@@ -33,9 +37,13 @@ if ($users = $db->get_results($sql, ARRAY_A)) {
 
 
 $OpcionesSelect = " class='combo-box' id='bacteriologa' " ;
+//$OpcionesSelect = "  id='bacteriologa' " ;
 $list = new PopUp($codigos_bact, $nombres_bact, "bacteriologa", "", "", 1, 270, $OpcionesSelect);
-$list->echoHtml();
 
+
+//$list = new PopUpSelect($codigos_bact, $nombres_bact, "EPS",  "EPS");
+
+$list->echoHtml();
 
 ?>
 

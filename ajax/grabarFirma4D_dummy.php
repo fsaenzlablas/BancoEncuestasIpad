@@ -7,7 +7,7 @@
 // ------------------------------------------------------------------------
 
 if (!isset($_SESSION['cod_bact'])) {
-    include_once('../apl/login.php');
+    include_once('../../dona.html');//'../apl/login.php');
     die();
 }
 

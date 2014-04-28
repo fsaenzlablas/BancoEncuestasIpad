@@ -1,5 +1,5 @@
 <?php
-
+@session_start();//29 oct 2013
 
 date_default_timezone_set("America/Bogota");
 include_once "../lib/shared/ez_sql_core.php";
@@ -13,15 +13,17 @@ if (isset($_POST['usuario']) and (isset($_POST['password'])) ) {
     $password = $_POST['password'];
 	$tipoencuesta = $_POST['tipoencuesta'];
 
-
     $sql="SELECT * FROM UsuariosLab WHERE CodigoUsuario4D = '$usuario' AND Clave LIKE BINARY '$password'";
     $rs = $db->get_row($sql);
     //$db->debug();
  
     if (isset($rs->Nombres)) {
+//echo "info ".$usuario;
+//die $usuario;
+
         @session_start();
-        $_SESSION["usuario_encuesta"] = $usuario;
-        $_SESSION["tipo_encuesta"] = $tipoencuesta;
+        $_SESSION['usuario_encuesta'] = $_POST['usuario'];//$usuario;
+        $_SESSION['tipo_encuesta'] = $tipoencuesta;
 
         header("Location:../apl/encuesta.php");
     } else {

@@ -11,6 +11,16 @@ die;
 */
 
 //var_dump($_POST);
+@session_start();//29 oct 2013
+
+if (isset($_POST['tipoencuesta'])) {//si viene de la ventana de demograficos .
+    if ($_SESSION['tipo_encuesta'] != $_POST['tipoencuesta']){
+         $_SESSION['tipo_encuesta'] = $_POST['tipoencuesta'];  
+    }
+   
+
+}
+
 
 $firma = $_POST['firma_donante'];
 $num_ot=$_POST['num_ot'];
@@ -22,7 +32,7 @@ $uri = substr($firma, strpos($firma, ",") + 1);
 // put the data to a file
 $file = "../firmas/" . $_SESSION[$num_ot]['encOtDon'] . ".png";
 if ($_SESSION["tipo_encuesta"] !="0"){//firma post donacion
-	$file = "../firmas/" . $_SESSION[$num_ot]['encOtDon']."P" . ".png";
+    $file = "../firmas/" . $_SESSION[$num_ot]['encOtDon']."P" . ".png";
 }
 if (file_exists($file)) {
     unlink($file);
@@ -47,12 +57,15 @@ $db = new ezSQL_mysql(EZSQL_DB_USER, EZSQL_DB_PASSWORD, EZSQL_DB_NAME, EZSQL_DB_
 
 $donante = $num_ot;
 if ($_SESSION["tipo_encuesta"] !="0"){//firma post donacion
-	$sql = "SELECT * FROM banco_registro r  WHERE r.Nro_Consecutivo = '$donante' AND r.Aceptada = 'PE'";
+//  $sql = "SELECT * FROM banco_registro r  WHERE r.Nro_Consecutivo = '$donante' AND r.Aceptada = 'PE'";
+    $sql = "SELECT * FROM banco_registro r  WHERE r.Nro_Consecutivo = '$donante' AND r.Aceptada = 'PE'";
 }
 else{
-	$sql = "SELECT * FROM banco_registro r  WHERE r.Nro_Consecutivo = '$donante' AND r.Encuesta = 'PE'";
-	
+//    $sql = "SELECT * FROM banco_registro r  WHERE r.Nro_Consecutivo = '$donante' AND r.Encuesta = 'PE'";
+    $sql = "SELECT * FROM banco_registro r  WHERE r.Nro_Consecutivo = '$donante' AND r.Encuesta = 'PE'";
+    
 }
+    $sql = "SELECT * FROM banco_registro r  WHERE r.Nro_Consecutivo = '$donante' ";//se va al login.
 
 
 //$sql = "SELECT * FROM banco_registro r  WHERE r.Nro_Consecutivo = '$donante' AND r.Encuesta = 'PE'";
@@ -97,6 +110,9 @@ if (!isset($rec->Nombre)) {
             <input type='hidden' id='primera_preg' name='primera_preg'  value='<?php echo $_SESSION[$num_ot]['primera_preg']; ?>' >
             <input type='hidden' id='go' name='go'  value='<?php echo $_SESSION[$num_ot]['cod_ant']; ?>' >
 
+   <input type='hidden'   id='tipoEncuesta' name='tipoEncuesta' class='normal-field' value='<?php echo $_SESSION["tipo_encuesta"]?>' />
+
+
 
 
             <div class="heading" id="datosDonante">
@@ -123,12 +139,12 @@ if (!isset($rec->Nombre)) {
 
             <div id="detalleFirma" align="center">
                 <?php
-					$sufijo = "";
-					if ($_SESSION["tipo_encuesta"] !="0"){//firma post donacion
-						$sufijo="P";
-					}
+                    $sufijo = "";
+                    if ($_SESSION["tipo_encuesta"] !="0"){//firma post donacion
+                        $sufijo="P";
+                    }
 
- 					$html_object = "<img src='../firmas/".$_POST['num_ot'].$sufijo.".png' width='100%' height='320'/>" ?>
+                    $html_object = "<img src='../firmas/".$_POST['num_ot'].$sufijo.".png' width='100%' height='320'/>" ?>
                 <?php echo $html_object ?>
             </div>
 
@@ -163,18 +179,21 @@ if (!isset($rec->Nombre)) {
              <?php $displayValidar = ""; ?>
 
             <?php } else  { ?>
-	           <?php $displayValidar = "style='display: none;'"; ?>
+               <?php $displayValidar = "style='display: none;'"; ?>
             <?php } ?>
 
             <div id="divValidarEnc" <?php echo $displayValidar ?> >
-	
+    
                 <input type="button" style="float:right;" id="validarEnc" class="boton2" value="Validar Encuesta"/>
 
                 <div id="divLoginValidar" style="display: none;" style="float:right;">
                     <span class="text-login ">Usuario :</span>
                     <input name="usuario" id="usuarioValidar" class="input-field"
                            value="<?php echo $_SESSION['usuario_encuesta'] ?>"/>
-                    <span class="text-login ">Contrase&ntilde;a:</span>
+
+                           <input type='hidden'   id='tipoEncuesta' name='tipoEncuesta' class='normal-field' value='<?php echo $_SESSION["tipo_encuesta"]?>' />
+
+                    <span class="text-login ">C&eacute;dula:</span>
                     <input name="password" id="passwordValidar" type="password" class="input-field"/>
                     <input type="button" id="loginValidar" class="boton2" value="Aceptar"/>
                     <input type="button" id="cancelarValidar" class="boton2" value="Cancelar"/>

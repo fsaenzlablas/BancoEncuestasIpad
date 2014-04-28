@@ -1,5 +1,5 @@
 <?php
-
+@session_start();//29 oct 2013
 // ------------------------------------------------------------------------
 // Programa: grabarEncuesta.php
 //
@@ -58,7 +58,7 @@ date_default_timezone_set("America/Bogota");
 
 if ($resultado === false) {
 
-    $resultado = "F|NO HAY SISTEMA DE LABORATORIO EN ESTE MOMENTO O SE ESTA REALIZANDO COPIA DE SEGURIDAD. INTENTE NUEVAMENTE. <br/><br/>Fecha y Hora: " . date('d/m/Y H:m:s'); // Significa que 4D Fallo
+    $resultado = "F|--NO HAY SISTEMA DE LABORATORIO EN ESTE MOMENTO O SE ESTA REALIZANDO COPIA DE SEGURIDAD. INTENTE NUEVAMENTE. <br/><br/>Fecha y Hora: " . date('d/m/Y H:m:s'); // Significa que 4D Fallo
     $_SESSION['resGrabEnc'] = $resultado;
 } else {
     /*

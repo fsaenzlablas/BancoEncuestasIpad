@@ -1,8 +1,18 @@
 
-* { margin: 0; padding: 0; outline: 0; }
+* { margin: 0; padding: 0; outline: 0;   }
 
-body { font: 14px/18px Arial,sans-serif; color: #333; text-align: left; background: #1b4497; padding-bottom:10px; }
+
+html {
+    margin: 0;
+    padding: 0;
+    background: #eee9df  ;
+
+}
+
+
+body { font: 14px/18px Arial,sans-serif; color: #333; text-align: left; background: #1b4497  ; padding-bottom:10px; }
 .shell { margin: 0 auto; width: 980px;}
+
 
 
 
@@ -24,6 +34,8 @@ a img { border: 0; }
 
 /* header*/
 .header{height:83px; width:980px; background:url(../css/images/header.gif); margin-top:17px; position:relative; z-index: 1;}
+
+.dialogo{background:url(../css/images/header.gif)}
 
 /* end of header*/
 h1.logo{
@@ -69,7 +81,7 @@ h2{color:#1e357a; font-size: 28px; line-height:30px;}
 
 .bottom-section{background:#ccc; width:980px}
 
-.footer{text-align: right; color:#ccc; padding-top:10px}
+.footer{text-align: right; color:#ccc; padding-top:10px; }
 .footer a{color:#fff}
 .footer p.left{float: left; display: inline; padding-left:10px}
 
@@ -282,23 +294,9 @@ th{
     height: 52px;
 
 }
-select {
-	font-size:200%;/*2em*/
-	background:#FFFFF0;/*#fc0;*/
-	height : 200%;/*40px*/
-/*	width: 30%;*/
-	float:left	;
-	border-radius : 5px;
-}
 
-label
-{
-	text-align : left;
-  float: left;
-  clear: right;
-/*font: 14px;*/
-font-size:200%;
-}
+
+
 
 input
 {
@@ -349,19 +347,104 @@ table.imagetable td {
 }
 
 
-.ui-dialog .ui-dialog-content {
-    padding: .5em 1em;
-    background: #ffffff;
-    overflow: auto;
-    zoom: 1;
-    opacity: 2;
-    border: 1px solid rgb(74, 159, 63);
 
+.label-Demografico
+{
+    text-align : left;
+    float: left;
+    
+    font-size:20px !important;
+ }
+
+.label2-Demografico
+{
+    text-align : left;
+  float: left;
+  clear: right;
+/*font: 14px; font-size:200% !important;*/
+    
+    font-size:20px !important;
+   height: 12px;
 }
 
 
+.mayuscula
+{
+    text-transform: uppercase;
+}
 
 
+select {
+	font-size:200%;/*2em*/
+	background:#FFFFF0;/*#fc0;*/
+	height : 200%;/*40px*/
+/*	width: 30%;*/
+width : 45%;
+	float:left	;
+	border-radius : 5px;
+}
+
+.select1Linea {
+    font-size:200%;/*2em*/
+    background:#FFFFF0;/*#fc0;*/
+    height : 200%;/*40px*/
+/*  width: 30%;*/
+width : 90%;
+    float:left  ;
+    border-radius : 5px;
+}
+
+.ui-dialog-contain
+    {
+        opacity: 1 !important;
+        background: #FFFFFF !important;
+    }
+    .ui-dialog .ui-header .ui-btn-icon-notext
+    {
+        display: none !important;
+    }
+    .ui-dialog-background
+    {
+        opacity: 0.5;
+        display: block !important;
+     }
+    
+    .ui-dialog-background.pop.in
+    {
+        opacity: 1;
+    }
+    
+    .ui-dialog
+    {
+        min-height: 100% !important;
+        background: transparent !important;
+    }
+
+.combo-box-demo{
+    font-size:large;
+    width: 50%;
+    height: 50px;
+    padding:12px;
+}
 
 
+.combo-box-small{
+    font-size:large;
+    width: 70px;
+    height: 40px;
+    padding:12px;
+}
 
+
+#popup_container {
+    font-family: Arial, sans-serif;
+    font-size: 12px;
+    min-width: 300px; /* Dialog will be no smaller than this */
+    max-width: 600px; /* Dialog will wrap after this width */
+    background: #FFF;
+    border: solid 5px #999;
+    color: #000;
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+    border-radius: 5px;
+}

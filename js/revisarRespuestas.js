@@ -64,12 +64,53 @@ $(document).ready(
 
         $('#nuevaEnc').click(function () {
 
-            if (confirm('Esta seguro comenzar una nueva encuesta?')) {
-                document.forms[0].action='../apl/login.php';
+            if (confirm('Esta seguro de comenzar una nueva encuesta?')) {
+                document.forms[0].action='../../dona.html';//'../apl/login.php';
                 document.forms[0].submit();
             }
 
         });
+
+
+
+        $('#nuevoDonante').click(function () {
+
+            if (confirm('Esta seguro de ingresar demograficos')) {
+
+                document.forms[0].action='../apl/FormularioCompleto.php';
+                document.forms[0].submit();
+
+              }
+
+        });
+
+       $('#nuevoEncPosDonacion').click(function () {
+
+            if (confirm('Esta seguro de llenar otra encuesta pos donacion?')) {
+$('#tipoEncuestaDemo').val("1");
+                document.forms[0].action='../apl/Encuesta.php';
+                document.forms[0].submit();
+
+              }
+
+        });
+
+
+       $('#nuevaEncuesta').click(function () {
+
+            if (confirm('Esta seguro de llenar otra encuesta?')) {
+// 10 de marzo , aqui se pueden grabar las respuestas .
+
+$('#tipoEncuestaDemo').val("0");
+                document.forms[0].action='../../dona.html';//'../apl/Encuesta.php';
+                document.forms[0].submit();
+
+              }
+
+        });
+
+
+
 
 
     } // Ready funcion
@@ -446,5 +487,47 @@ function validarEncuesta() {
 
 
     return false;
+
+}
+
+
+function irADemograficos() {
+
+     
+    if (confirm('Esta seguro ingresar demograficos?')) {
+
+        document.forms[0].action='../apl/FormularioCompleto.php';
+        document.forms[0].submit();
+        
+
+    }
+
+}
+
+function irAEncuesta() {
+
+     
+    if (confirm('Esta seguro de llenar otra encuesta?')) {
+       // $('#tipoEncuesta').val("0");
+        tipoencuesta.value = "0";
+        document.forms[0].action='../apl/Encuesta.php';
+        document.forms[0].submit();
+        
+
+    }
+
+}
+
+function irAEncuestaPosDonacion() {
+
+     
+    if (confirm('Esta seguro de llenar la encuesta pos donacion?')) {
+        //$('#tipoEncuesta').val("1");
+        tipoencuesta.value = "1";
+        document.forms[0].action='../apl/Encuesta.php';
+        document.forms[0].submit();
+        
+
+    }
 
 }

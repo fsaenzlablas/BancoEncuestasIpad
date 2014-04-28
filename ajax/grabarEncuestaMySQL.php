@@ -1,5 +1,5 @@
 <?php
-
+@session_start();//29 oct 2013
 // ------------------------------------------------------------------------
 // Programa: grabarEncuestaMySQL.php
 //

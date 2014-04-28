@@ -230,15 +230,38 @@ function showDatosDonante() {
 
     $.ajax({
         type : 'POST',
-        url : "../ajax/showDatosDonante.php",
+        url : "../ajax/showDatosDonanteJson.php",
         dataType : 'html',
         data: {
 
         },
         success : function(data){
+               if (data!=""){//14 de noviembre cambiado a un JSON
+                    var obj = eval('('+data+')');//convierte el texto a JSON
 
-            $('#detalleDonante').html(data);
-            $('#detalleDonante').show();
+
+                    vDonanteEncuesta.orden = obj.ot;
+                    vDonanteEncuesta.cedula = obj.cc;
+                    vDonanteEncuesta.nombres = obj.nombre;
+                    vDonanteEncuesta.apellido1 = obj.apellido1;
+                    vDonanteEncuesta.apellido2 = obj.apellido2;
+                    vDonanteEncuesta.genero = obj.sexo;
+                    vDonanteEncuesta.bacteriologa = obj.codbact;
+
+                    $data2=" <div class='datosDonante'>";
+                    $data2+="CEDULA:  <strong>{vDonanteEncuesta.cedula} </strong>";
+                    $data2+="NOMBRES: <strong>{vDonanteEncuesta.nombres} {vDonanteEncuesta.apellido1} {vDonanteEncuesta.apellido2}  </strong> Sexo:  <strong>{vDonanteEncuesta.genero} </strong>";
+                    $data2+="Consecutivo donaci&oacute;n: <strong> {vDonanteEncuesta.orden} </strong>";//$num_ot
+                    $data2+="<br>Bacteriologa responsable:  {$_SESSION[$num_ot]['nom_bact']}";
+                    $data2+="</div>";
+                
+                    $('#detalleDonante').html($data2);
+                    $('#detalleDonante').show();
+   
+                }
+
+            //$('#detalleDonante').html(data);
+            //$('#detalleDonante').show();
 
         },
         error : function(XMLHttpRequest, textStatus, errorThrown) {

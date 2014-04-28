@@ -1,0 +1,10 @@
+_Store
+\.classpath
+\.project
+\.settings
+\.metadata/
+Servers/
+target/
+nbproject
+.svn
+firmas

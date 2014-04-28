@@ -4,7 +4,7 @@ function  fSelect($inicial , $final ,$id , $label,$incremento=1) {
 	$select = "";
 	if ($id != ""){
 		$select = "<div id='$id' >";
-		$select .= "<select name='$id' id='$id' >";
+		$select .= "<select name='$id' id='$id'  >";
 	}
 	if ($label != ""){
 		$select .= "<option >$label</option>";
@@ -23,11 +23,34 @@ function  fSelect($inicial , $final ,$id , $label,$incremento=1) {
 	$vTxt .= "<select name='$id' id='$id'>";
 	
 	$ccJqmovil=	"<div class='ui-select'><div data-corners='true' data-shadow='true' data-iconshadow='true' data-wrapperels='span' data-icon='arrow-d' data-iconpos='right' data-theme='c' class='ui-btn ui-shadow ui-btn-corner-all ui-btn-icon-right ui-btn-up-c'><span class='ui-btn-inner ui-btn-corner-all'><span class='ui-btn-text'><span>".$label."</span></span><span class='ui-icon ui-icon-arrow-d ui-icon-shadow'>&nbsp;</span></span>";
-	
-	
-//	return $vTxt.$select."</div></div>";
 	return $select;
 }
+
+function  fSelect10($inicial , $final ,$id , $label,$incremento=1) {
+
+	$select = "";
+	if ($id != ""){
+		$select = "<div id='$id' >";
+		$select .= "<select name='$id' id='$id'  >";
+	}
+	if ($label != ""){
+		$select .= "<option >$label</option>";
+	}
+	$i=$inicial;
+	$yyy = $inicial/10;
+	while ( $i<=$final){
+		
+		$select  .=  "<option id=\'$id.$i\' value='$i'>$yyy</option>";
+		$i += $incremento;
+		$yyy = $i / $incremento;
+	}
+	$select .= "</select>";
+	$select .= "  </div>";
+	return $select;
+
+}
+
+
 
 function fLlenarPopArreglo($id,$label ,$arreglo){
 	$select="<select name='$id' id='$id'  >";
@@ -71,24 +94,24 @@ return $select;
 
 	$tempSelect = fSelect(35,39,'poPtemperatura','&deg;C',1);
 	$tempDecimal = fSelect(0,9,'poPtemperatura_dec','.',1);
-	$tempPeso = fSelect(40,170,'poPpeso','Peso',10);
-	$tempPesoUnidad = fSelect(0,9,'poPpesounidad','',1);
+	$tempPeso = fSelect10(40,170,'poPpeso','Peso',10);
+	$tempPesoUnidad = fSelect(0,9,'poPpesounidad','+',1);
 	
 
-	$tempEdad = fSelect(0,110,'poPedad','A&ntilde;os',10);
+	$tempEdad = fSelect10(0,110,'poPedad','A&ntilde;os',10);
 	$tempEdadUnidad = fSelect(0,9,'poPedadunidad','+',1);
 
-	$tempSistolica = fSelect(90,170,'poPsistolica','mmHg',10);
-	$tempSistolicaUnidad = fSelect(0,9,'poPsistolicaunidad','',1);
+	$tempSistolica = fSelect10(90,170,'poPsistolica','mmHg',10);
+	$tempSistolicaUnidad = fSelect(0,9,'poPsistolicaunidad','+',1);
 
-	$tempDiastolica = fSelect(50,100,'poPdiastolica','mmHg',10);
-	$tempDiastolicaaUnidad = fSelect(0,9,'poPdiastolicaunidad','',1);
+	$tempDiastolica = fSelect10(50,100,'poPdiastolica','mmHg',10);
+	$tempDiastolicaaUnidad = fSelect(0,9,'poPdiastolicaunidad','+',1);
 	
 	$tempHemoglobina = fSelect(10,20,'poPhemoglobina','gr/dL',1);
 	$tempHematocrito = fSelect(30,62,'poPhematocrito','gr/dL',1);
 
-	$tempFCardiaca = fSelect(50,100,'poPfcardiaca','P/min',10);
-	$tempFCardiacaUnidad = fSelect(0,9,'poPfcardiacaunidad','',1);
+	$tempFCardiaca = fSelect10(50,100,'poPfcardiaca','P/min',10);
+	$tempFCardiacaUnidad = fSelect(0,9,'poPfcardiacaunidad','+',1);
 	
 	$tempDias =  fSelect(1,31,'poPday','Dia',1);
 //$tempGenero=	fLlenarGenero();

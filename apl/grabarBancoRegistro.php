@@ -1,4 +1,5 @@
 <?php
+@session_start();//29 oct 2013
 
 // ------------------------------------------------------------------------
 // Programa: grabarEncuesta.php
@@ -69,6 +70,12 @@ $parametros['wsItxtCedula'] = $_POST['txtCedula'];
 
 $parametros['wsIpopOrdenes'] = $_POST['popOrdenes'];
 $parametros['wsItxtCodBacteriologa'] = $_POST['txtCodBacteriologa'];
+
+if ($parametros['wsItxtCodBacteriologa']==""){
+    $parametros['wsItxtCodBacteriologa'] = $_SESSION['codigobacteriologa'];
+}
+
+
 $parametros['wsIBacteriologas'] = $_POST['Bacteriologas'];
 
 $parametros['wsItxtOTbuscar'] = $_POST['txtOTbuscar'];
@@ -81,12 +88,11 @@ $parametros['wsItxtApellido1'] = $_POST['txtApellido1'];
 $parametros['wsItxtApellido2'] = $_POST['txtApellido2'];
 $parametros['wsItxtDireccion'] = $_POST['txtDireccion'];
 $parametros['wsItxtTelefonos'] = $_POST['txtTelefonos'];
-$parametros['wsIpoPedad'] = $_POST['poPedad'];
 
-$parametros['wsIpoPedadunidad'] = $_POST['poPedadunidad'];
-$parametros['wsIpoPday'] = $_POST['poPday'];
-$parametros['wsIpoPmonth'] = $_POST['poPmonth'];
-$parametros['wsIpoPyear'] = $_POST['poPyear'];
+
+$parametros['wsIpoFechanat'] = $_POST['txtFechaNat'];
+$parametros['wsIpoPedad'] = $_POST['txtEdad'];
+
 $parametros['wsIpopGenero'] = $_POST['popGenero'];
 
 $parametros['wsIpopGrupoSanguineo'] = $_POST['popGrupoSanguineo'];
@@ -97,18 +103,23 @@ $parametros['wsIEPS'] = $_POST['EPS'];
 $parametros['wsItxtE_Mail'] = $_POST['txtE_Mail'];
 
 $parametros['wsItxtReceptor'] = $_POST['txtReceptor'];
+
 $parametros['wsItextarea_observaciones'] = $_POST['textarea_observaciones'];
+
+
 $parametros['wsItextarea_reaccion'] = $_POST['textarea_reaccion'];
 $parametros['wsIpoPpeso'] = $_POST['poPpeso'];
 $parametros['wsIpoPpesounidad'] = $_POST['poPpesounidad'];
 
 $parametros['wsIpoPtemperatura'] = $_POST['poPtemperatura'];
 $parametros['wsIpoPtemperatura_dec'] = $_POST['poPtemperatura_dec'];
+
 $parametros['wsIpoPsistolica'] = $_POST['poPsistolica'];
 $parametros['wsIpoPsistolicaunidad'] = $_POST['poPsistolicaunidad'];
-$parametros['wsIpoPdiastolica'] = $_POST['poPdiastolica'];
 
+$parametros['wsIpoPdiastolica'] = $_POST['poPdiastolica'];
 $parametros['wsIpoPdiastolicaunidad'] = $_POST['poPdiastolicaunidad'];
+
 $parametros['wsIpoPhemoglobina'] = $_POST['poPhemoglobina'];
 $parametros['wsIpoPhemoglobina_dec'] = $_POST['poPhemoglobina_dec'];
 $parametros['wsIpoPhematocrito'] = $_POST['poPhematocrito'];
@@ -116,6 +127,7 @@ $parametros['wsIpoPhematocrito_dec'] = $_POST['poPhematocrito_dec'];
 
 $parametros['wsIpoPfcardiaca'] = $_POST['poPfcardiaca'];
 $parametros['wsIpoPfcardiacaunidad'] = $_POST['poPfcardiacaunidad'];
+
 $parametros['wsItextarea_comentaFisico'] = $_POST['textarea_comentaFisico'];
 
 $parametros['wsIComponentes'] = $_POST['Componentes'];
@@ -125,10 +137,15 @@ $parametros['wsIidFenotipoTxt'] = $_POST['idFenotipoTxt'];
 $parametros['wsIidEFisicoTxt'] = $_POST['idEFisicoTxt'];
 
 
+$parametros['wsAuxiliarEFisico'] = $_POST['idwsAuxiliarEFisico'];//18/03/2014
+
+
+
+
 //die(var_dump($_POST));
 //echo $parameters;
 //die(var_dump($parameters);
-$db = new ezSQL_mysql(EZSQL_DB_USER, EZSQL_DB_PASSWORD, EZSQL_DB_NAME, EZSQL_DB_HOST);
+//$db = new ezSQL_mysql(EZSQL_DB_USER, EZSQL_DB_PASSWORD, EZSQL_DB_NAME, EZSQL_DB_HOST);
 
 $database = new FourDimensionAccess();
 $database->connect();
@@ -137,9 +154,26 @@ $resultado = $database->call4DWebServer('wsIpadBancoRegistro', $parametros);
 
 $database->disconnect();
 
+if (0){//comentado por ahora
+  if ($resultado != ""){
+    $donante  = $resultado;
+    $num_ot =$resultado;
+    $_SESSION[$num_ot]['encOtDon'] = $donante;
+    $_SESSION[$num_ot]['encCCDon'] = $parametros['wsItxtCedula'] ;
 
-unset($Client);
+    $_SESSION[$num_ot]['encNombreDon'] = $parametros['wsItxtNombre'] ;
+    $_SESSION[$num_ot]['encApellido1Don'] = $parametros['wsItxtApellido1']; 
+    $_SESSION[$num_ot]['encApellido2Don'] = $parametros['wsItxtApellido2'] ;
+    $_SESSION[$num_ot]['encReceptor'] = $parametros['wsItxtReceptor'] ;
+    $_SESSION[$num_ot]['encSexDonante'] = $parametros['wsIpopGenero'] ;
+    $_SESSION[$num_ot]['cod_bact'] = $parametros['wsItxtCodBacteriologa'] ;
+    include "../ajax/configEncuesta.php";
+}
+  
+}
+//unset($Client);
 echo $resultado;
+
 
 ?>
 

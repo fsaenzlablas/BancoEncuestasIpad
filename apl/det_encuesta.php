@@ -1,16 +1,55 @@
+
 <?php
 
-if (isset ($_GET['num_ot'])) {
+//header('Content-Type: text/html; charset=ISO-8859-1');
+
+@session_start();//29 oct 2013
+
+if (isset ($_GET['num_ot'])) {//29 oct 2013
     $_POST['num_ot'] = $_GET['num_ot'];
 }
+if (isset($_POST['num_ot'])) {
+    $num_ot= $_POST['num_ot'];
+}
 
-$num_ot = $_POST['num_ot'];
+//$num_ot = $_POST['num_ot'];
 
 if (!isset($_SESSION[$num_ot]['encOtDon'])) {
-    include '../apl/encuesta.php';
-    die;
+   // include '../apl/encuesta.php';
+    include "../ajax/configEncuesta.php";
+   //  die;//3 nov 2013
 }
+
+if (isset($_POST['tipoEncuesta'])) {
+    $_SESSION['tipo_encuesta'] = $_POST['tipoEncuesta']; 
+}
+
+if (isset($_POST['txtNombre'])) {
+    $_SESSION['tipo_encuesta'] = "0"; //viene de la ventana de demograficos.
+}
+
+
+
+if ($_SESSION[$num_ot]['encNombreDon']==""){
+   //     include '../../menuDonante.php';
+        include '../../dona.html';
+ die;
+
+//     include "../ajax/configEncuesta.php";
+   
+}
+
+if (isset($_POST['usuarioencuesta'])) {
+  //  $num_ot= $_POST['usuarioencuesta'];
+    $_SESSION['usuario_encuesta'] = $_POST['usuarioencuesta'];
+}else if ($_SESSION['usuario_encuesta']=="") {
+    $_SESSION['usuario_encuesta'] ="donante";
+}
+
+
+
 ?>
+
 <html>
 <head>
 
@@ -56,7 +95,7 @@ if (!isset($_SESSION[$num_ot]['encOtDon'])) {
                     <img src="../css/images/ajax-loader.gif" title="Loader" alt="Loader"/>
                 </div>
 
-                <input type='hidden' id='num_ot' name='num_ot' class='normal-field'  value='<?php echo $_POST['num_ot']?>' >
+                <input type='hidden' id='num_ot' name='num_ot' class='normal-field'  value='<?php echo  $num_ot ?>' >
 
                 <div id="detalleDonante">
                     <script language="JavaScript">showDatosDonante();</script>

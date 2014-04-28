@@ -4,6 +4,7 @@
  * Sirve para hacer debugger
  */
 
+@session_start();//29 oct 2013
 
 if (isset($_GET['num_ot'])) {
     $num_ot = $_GET['num_ot'];

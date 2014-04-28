@@ -1,5 +1,49 @@
+function DonanteEncuesta(){
+    this.orden = "";
+    this.cedula  = "";
+    this.nombres ="";
+    this.apellido1  = "";
+    this.apellido2 ="";
+    this.telefonos  = "";
+    this.direccion ="";
+    this.email ="";
+    this.receptor  = "";
+    this.observaciones ="";
+    this.reaccion ="";
+    this.encuestaOK  = "PE";
+    this.perfilOK ="PE";
+    this.fenotipoOK ="PE";
+    this.examenfisicoOK  = "PE";
+    this.bacteriologa = "";
+    this.fechanat = "";
+    this.genero = "";
+    this.edad = "";
+    this.comentarios = "";
+    this.empresa = "";
+    this.categoria = "";
+    this.tipodonacion = "";
+    this.usuario = "";
+
+}
+
+var vDonanteEncuesta = new DonanteEncuesta();
+
 var enFirma= false;
 var enRevisar= false;
+
+var ultpregEnc = 0;//29 oct 2013
+
+vNumOT ="";
+
+function Bacteriologa(){
+
+    this.codigo ="";
+    this.nombre ="";
+    this.secreto ="";
+
+}
+
+var vArrBacteriologas = [];//new Bacteriologa();//15 feb 2014
 
 $(document).ready(
 
@@ -10,6 +54,8 @@ $(document).ready(
         // ----------------------------------------------------------------------
 
         donante=$('#num_ot').val();
+        vNumOT =$('#num_ot').val();
+
         $('#num_ot').focus();
 
         $('#divSiguientePreg').show();
@@ -30,6 +76,130 @@ $(document).ready(
             empezarEncuesta();
 
         });
+
+
+       $('#getMenuDonante').click(function() {
+
+            $vCedulaDonante = $('#num_ot').val();
+            $ccPartes = ""
+            $cta=0;
+
+            for (var $i=$vCedulaDonante.length;$i>=0;$i--){
+                $cta++;
+                $ccPartes = $vCedulaDonante.substring($i-1,$i)+$ccPartes;
+                if (($cta%3)==0) $ccPartes =" "+$ccPartes;//un espacio
+            }
+            $vIdMayuscula = $vCedulaDonante.toUpperCase();
+            if (($vIdMayuscula!="ENF") && ($vIdMayuscula!="BACT")){
+                if (!confirm('El numero de cedula es :'+$ccPartes+' ?') ){
+                    return ;
+                }
+
+            }
+
+
+
+            $.ajax({
+                type : 'POST',
+                url : "../ajax/getMenuDonante.php",
+                dataType : 'html',
+                data: {
+                    num_ot: $('#num_ot').val()
+                },
+                success : function(data){
+
+
+                    alert(data);
+                    var obj = eval('('+data+')');//convierte el texto a JSON
+console.log(obj);
+//alert(data);
+
+                    num_ot.value = obj.info;
+                    txtOrden.value = obj.info;//simular que viene de demograficos .
+                    vNumOT = obj.info;
+                    $usuario = obj.usuario;
+                    $('#num_ot').val(obj.info);
+                    $('#txtOrden').val(obj.info);
+                    $('#txtccPac').val(obj.cc);
+                    num_ot = obj.info;
+                    txtOrden= obj.info;
+                    txtccPac = obj.cc;
+vDonanteEncuesta.cedula =  obj.cc;                    
+vDonanteEncuesta.orden =    obj.info;               
+vDonanteEncuesta.nombres= obj.nombre;
+vDonanteEncuesta.apellido1= obj.apellido1;
+vDonanteEncuesta.apellido2= obj.apellido2;
+vDonanteEncuesta.genero= obj.sexo;
+vDonanteEncuesta.bacteriologa= obj.codbact;
+vDonanteEncuesta.usuario= obj.usuario;
+
+
+
+ //                   tipoencuesta.value = obj.tipoencuesta;
+//$('#tipoencuesta').val(obj.tipoencuesta);
+console.log("el usuario "+vDonanteEncuesta.usuario);
+                    if (vDonanteEncuesta.usuario =="donante"){
+                       // $_SESSION['usuario_encuesta'] = "donante";
+                    }
+                    if (obj.error ==  ''){
+//alert("el usuario es"+$usuario);
+                    
+                        $('#num_ot').val(obj.info);
+                        $('#bacteriologa').val($usuario);
+                        $('#bacteriologa').val('Diana Rendon');
+
+                        if (obj.pagina ==  '') {
+                            //obj.metodo.call() ;
+
+                        }else{
+                             num_ot.value = vNumOT;
+
+                             //7 de marzo 2014
+                            if (obj.metodo != ""){//OJO Si ingresan algo en metodo, se va para la encuesta
+                                $('#num_ot').val(obj.info);
+                                 //empezarEncuesta();
+                                 cargarPreguntas();
+                                 //document.forms[0].action='../'+obj.pagina;
+                                  document.forms[0].action='../apl/'+obj.pagina;
+                                document.forms[0].submit();
+                             }else if ($usuario=="bacteriologa"){//validar la clave de la bacteriologa
+                                    $('#idClaveUsuario').val("");//borrar las claves previas .
+                                    getBacteriologasMovil();
+                                    $.mobile.changePage('#paginaClaveUsuario','slide');
+                                   // $.mobile.changePage('#paginaClaveUsuario','slide');
+                            }else{
+                             //   document.forms[0].action='../apl/'+obj.pagina;//+"?num_ot="+vNumOT;
+                                document.forms[0].action='../apl/'+obj.pagina;
+                                document.forms[0].submit();
+                                }
+
+
+                        }
+                     
+
+                    }else{
+                        alert(obj.error);
+                        document.forms[0].action='../../dona.html';
+                        document.forms[0].submit();
+
+                    }
+ 
+                    $('#erroresEnc').html(data);
+                    $('#erroresEnc').show();
+
+                },
+                error : function(XMLHttpRequest, textStatus, errorThrown) {
+                    $('#waiting').hide();
+                    $('#message').fadeIn(1000);
+                    $('#message').removeClass().addClass('error').text('Error al ejecutar la busqueda. Informe a sistemas getMenuDonante en js').show(500);
+                    $('#detalleDonante').hide();
+
+
+                }
+            });
+
+        });
+
 
 
         $('#Deshabilitar').click(function() {
@@ -68,6 +238,40 @@ $(document).ready(
         $('#reiniciarEnc').click(function() {
             reiniciarEncuesta()
         });
+
+
+
+
+
+
+
+$('#bValidarClave').click(function() {
+
+
+    var vusuario = $('#idBactXClave :selected').val();
+    var clave = $('#idClaveUsuario').val();
+ 
+    var posBact = -1;
+    posBact= fBuscarXClave(clave,vusuario);
+ 
+
+    if ((vusuario!="") && (posBact>=0)){
+//alert(vArrBacteriologas[posBact].nombre);
+        $ok = fActualizarVariableSesion('nombrebacteriologa',vArrBacteriologas[posBact].nombre);
+       $ok = fActualizarVariableSesion('nuevaEncuesta',vusuario);
+
+        
+        document.forms[0].action='../apl/'+'FormularioCompleto.php';
+        document.forms[0].submit();
+
+
+
+    }else if (vusuario==""){
+        jAlert("Seleccione una bacteriologa");
+
+    }
+        
+ });
 
 
         $('#cancelarLogin').click(function() {
@@ -229,7 +433,7 @@ $(document).ready(
             
             function(){
 
-                $('#num_ot').val($('#num_ot').val().toUpperCase())
+                $('#num_ot').val($('#num_ot').val().toUpperCase());
                 
                 
                 $('#waiting').show();
@@ -271,6 +475,18 @@ $(document).ready(
                                 break;
 
                             case "2": // Indica que la encuesta ESTA contestada pero NO esta validada
+                                
+                                $('#detalleDonante').html(data.substring(2));
+                                $('#detalleDonante').show();
+                                $('#Responsable').hide();
+                                $('#divEmpezarEnc').hide();
+                                $('#divValidarEnc').show();
+
+                                break;
+
+
+                            case "9": // Se busco por cedula
+                                $('#num_ot').val(data.substring(2));
                                 
                                 $('#detalleDonante').html(data.substring(2));
                                 $('#detalleDonante').show();
@@ -393,7 +609,16 @@ $(document).ready(
 
 		
 				}else{
-					alert("Falta la firma Post-donación")
+					alert("Falta la firma Post-donación 1");
+                      if (confirm('Desea realizar esta validacion?')) {
+                        $("#tipoEncuesta").val("1");
+                        $_SESSION['tipo_encuesta'] = "1";
+                        //document.forms[0].action='../apl/login.php';
+                        //document.forms[0].submit();
+
+
+                    }
+
 				}
 
 
@@ -419,8 +644,18 @@ $(document).ready(
 
 	                }
 	
-				}else{ alert("Falta la Firma Post-donación")}
+				}else{ //alert("Falta la Firma Post-donación")
+                    alert("Falta la firma Post-donación 2")
+                      if (confirm('Desea realizar esta validacion?')) {
+ $("#tipoEncuesta").val("1");
+                        $_SESSION['tipo_encuesta'] = "1";
 
+                        //document.forms[0].action='../apl/login.php';
+                        //document.forms[0].submit();
+
+
+                    }
+                }
 
 
 
@@ -524,11 +759,14 @@ function onClickRadio(obj, tipoPreg, re, tipoNext, codNext, num_ot, pa){
 
     
     cod_preg=obj.name.substring(obj.name.lastIndexOf('_')+1);
+  
     resp_preg=obj.value;
 
  
     var id_carita=id_respuesta.replace("respuesta", "imagen");
     var id_pregunta_next="#pregunta_"+codNext;
+
+  
     var id_respuesta_next="#respuesta_"+codNext;
     
     if (obj.value==re) {
@@ -549,6 +787,8 @@ function onClickRadio(obj, tipoPreg, re, tipoNext, codNext, num_ot, pa){
         }
 
     }
+  ultpregEnc=codNext;//codNext;
+  //    console.log("la pregunta "+cod_preg+" "+ultpregEnc);
 
     //
     // Grabar la respuesta dada por el usuario en variables de sesion
@@ -602,7 +842,6 @@ function onClickRadio(obj, tipoPreg, re, tipoNext, codNext, num_ot, pa){
 function onChangeComboBox(obj, tipoPreg, re, tipoNext, codNext, num_ot, pa){
 
     id_respuesta="#"+obj.name
-    
     $('#waiting2').show();
     
     cod_preg=obj.name.substring(obj.name.lastIndexOf('_')+1);
@@ -612,6 +851,8 @@ function onChangeComboBox(obj, tipoPreg, re, tipoNext, codNext, num_ot, pa){
     //$(id_carita).attr('src', '../css/images/triste.png')
     $(id_carita).attr('src', '../css/images/ok.png')
     
+        ultpregEnc=codNext;//codNext;
+
     if (resp!="NO APLICA") {
         $(id_respuesta).removeClass().addClass('con-respuesta');
     } else {
@@ -621,6 +862,7 @@ function onChangeComboBox(obj, tipoPreg, re, tipoNext, codNext, num_ot, pa){
         $(id_carita).attr('src', './css/images/sinrespuesta.jpg')
         return
     }
+    ultpregEnc=codNext;//codNext;
 
     //
     // Grabar la respuesta dada por el usuario en variables de sesion
@@ -735,29 +977,76 @@ function getBacteriologas() {
      */
 
 function showDatosDonante() {
- 
+        
 
-    $.ajax({
-        type : 'POST',
-        url : "../ajax/showDatosDonante.php",
-        dataType : 'html',
-        data: {
-            num_ot :  $('#num_ot').val()
-        },
-        success : function(data){
+//alert("en show donante "+vDonanteEncuesta.nombres);
+    if (0){ // comentado por ahora vDonanteEncuesta.nombres!=""){
 
-            $('#detalleDonante').html(data);
-            $('#detalleDonante').show();
+                    $data2=" <div class='datosDonante'>";
+                    $data2+="CEDULA:  <strong>"+vDonanteEncuesta.cedula+" </strong>";
+                    $data2+="NOMBRES: <strong>"+vDonanteEncuesta.nombres+"  "+vDonanteEncuesta.apellido1+"  "+vDonanteEncuesta.apellido2+"   "+"</strong> Sexo:  <strong>"+vDonanteEncuesta.genero+"  "+"</strong>";
+                    $data2+="Consecutivo de donaci&oacute;n: <strong> "+ vDonanteEncuesta.orden+" </strong>";//$num_ot
+                    $data2+="<br>Bacteriologa responsable:  ";//{$_SESSION[$num_ot]['nom_bact']}
+                    $data2+="</div>";
+                    /*
+        data=" <div class='datosDonante'>";
+        data+="CEDULA:  <strong>vDonanteEncuesta.cedula </strong>";
+        data+="NOMBRES: <strong>vDonanteEncuesta.nombres vDonanteEncuesta.apellido1 vDonanteEncuesta.apellido2  </strong> Sexo:  <strong>vDonanteEncuesta.genero </strong>";
+        data+="Consecutivo donaci&oacute;n: <strong> vDonanteEncuesta.orden </strong>";//$num_ot
+        data+="<br>Bacteriologa responsable:  ";//{$_SESSION[$num_ot]['nom_bact']}
+        data+="</div>";*/
 
-        },
-        error : function(XMLHttpRequest, textStatus, errorThrown) {
-            $('#waiting').hide();
-            $('#message').fadeIn(1000);
-            $('#message').removeClass().addClass('error').text('Error al ejecutar la busqueda. Informe a sistemas [getDatosEncuesta]').show(500);
-            $('#detalleDonante').hide();
+                $('#detalleDonante').html($data2);
+                $('#detalleDonante').show();
+    }else{
 
-        }
-    });
+         $.ajax({
+            type : 'POST',
+            url : "../ajax/showDatosDonanteJson.php",
+            dataType : 'html',
+            data: {
+                num_ot :  $('#num_ot').val()
+            },
+            success : function(data){
+                if (data!=""){//14 de noviembre cambiado a un JSON
+                    //alert(data); informacion del donante .
+                    var obj = eval('('+data+')');//convierte el texto a JSON
+
+
+                    vDonanteEncuesta.orden = obj.ot;
+                    vDonanteEncuesta.cedula = obj.cc;
+                    vDonanteEncuesta.nombres = obj.nombre;
+                    vDonanteEncuesta.apellido1 = obj.apellido1;
+                    vDonanteEncuesta.apellido2 = obj.apellido2;
+                    vDonanteEncuesta.genero = obj.sexo;
+                    vDonanteEncuesta.bacteriologa = obj.codbact;
+
+                    $data2=" <div class='datosDonante'>";
+                    $data2+="CEDULA:  <strong>"+vDonanteEncuesta.cedula+" </strong>";
+                    $data2+="NOMBRES: <strong>"+vDonanteEncuesta.nombres+"  "+vDonanteEncuesta.apellido1+"  "+vDonanteEncuesta.apellido2+"   "+"</strong> Sexo:  <strong>"+vDonanteEncuesta.genero+"  "+"</strong>";
+                    $data2+="Consecutivo donaci&oacute;n: <strong> "+ vDonanteEncuesta.orden+" </strong>";//$num_ot
+                    $data2+="<br>Bacteriologa responsable:  ";//{$_SESSION[$num_ot]['nom_bact']}
+                    $data2+="</div>";
+                
+                    $('#detalleDonante').html($data2);
+                    $('#detalleDonante').show();
+   
+                }
+
+            },
+            error : function(XMLHttpRequest, textStatus, errorThrown) {
+                $('#waiting').hide();
+                $('#message').fadeIn(1000);
+                $('#message').removeClass().addClass('error').text('Error al ejecutar la busqueda. Informe a sistemas [showDatosDonante]').show(500);
+                $('#detalleDonante').hide();
+
+            }
+        });
+       
+    }
+
+
+
 
 
     return false;
@@ -795,6 +1084,7 @@ function showPreguntaEncuesta() {
 
                 },
                 success : function(data){
+//console.log("por aqui");
 
                     $('#detallePregunta').html(data);
                     contestada(false);
@@ -804,7 +1094,7 @@ function showPreguntaEncuesta() {
                     $('#waiting').hide();
                     $('#message').fadeOut(400);
                     $('#message').fadeIn(400);
-                    $('#message').removeClass().addClass('error').text('Error al ejecutar la busqueda. Informe a sistemas [showPreguntaEncuesta()]').show(500);
+                    $('#message').removeClass().addClass('error').text('Error al ejecutar la busqueda. Informe a sistemas [showPreguntaEncuesta() err]').show(500);
                     $('#detallePregunta').hide();
 
                 }
@@ -905,13 +1195,15 @@ function showPregunta(go) {
     // Como armo la encuesta nuevamente, ahora si muestre las preguntas
     // con sus respuestas posibles
     // -------------------------------------------------------------------
+//alert("LA PREGUNTA "+ultpregEnc);
+//ultpregEnc=go;
 
         $.ajax({
             type : 'POST',
             url : "../ajax/showPregunta.php",
             dataType : 'html',
             data: {
-                go: go,
+                go: go,//ultpregEnc,
                 num_ot :  $('#num_ot').val()
             },
             success : function(data){
@@ -921,6 +1213,8 @@ function showPregunta(go) {
                 } else {
                     $('#detallePregunta').html(data);
                     contestada(false);
+                    
+
                 }
 
             },
@@ -928,7 +1222,7 @@ function showPregunta(go) {
                 $('#waiting').hide();
                 $('#message').fadeOut(400);
                 $('#message').fadeIn(400);
-                $('#message').removeClass().addClass('error').text('Error al ejecutar la busqueda. Informe a sistemas [getDatosEncuesta]').show(500);
+                $('#message').removeClass().addClass('error').text('Error al ejecutar la busqueda. Informe a sistemas [showPregunta go]').show(500);
                 $('#detallePregunta').hide();
 
             }
@@ -1024,9 +1318,49 @@ function showRespuestas() {
 function nuevaEncuesta() {
 
      
-    if (confirm('Esta seguro comenzar una nueva encuesta?')) {
+    if (confirm('Esta seguro de comenzar una nueva encuesta?')) {
 
-        document.forms[0].action='../apl/login.php';
+ //       document.forms[0].action='../apl/login.php';
+        document.forms[0].action='../apl/menuDonante.php';
+        document.forms[0].submit();
+        
+
+    }
+
+}
+
+function irADemograficos() {
+
+     
+    if (confirm('Esta seguro ingresar demograficos?')) {
+
+        document.forms[0].action='../apl/FormularioCompleto.php';
+        document.forms[0].submit();
+        
+
+    }
+
+}
+
+function irAEncuesta() {
+
+     
+    if (confirm('Esta seguro de llenar otra encuesta?')) {
+        $('#tipoEncuesta').val("0");
+        document.forms[0].action='../apl/Encuesta.php';
+        document.forms[0].submit();
+        
+
+    }
+
+}
+
+function irAEncuestaPosDonacion() {
+
+     
+    if (confirm('Esta seguro de llenar la encuesta pos donacion?')) {
+        $('#tipoEncuesta').val("1");
+        document.forms[0].action='../apl/Encuesta.php';
         document.forms[0].submit();
         
 
@@ -1117,13 +1451,18 @@ function reiniciarEncuesta()  {
 
 
 function empezarEncuesta() {
+
+
     // alert ($('#bacteriologa').val() + " " +$('#bacteriologa option:selected').text());
     $.ajax({
+
+        
+
         type : 'POST',
         url : "../ajax/configEncuesta.php",
         dataType : 'html',
         data: {
-            num_ot :  $('#num_ot').val(),
+            num_ot :  vNumOT , //$('#num_ot').val(),
             cod_bact: $('#bacteriologa').val(),
             nom_bact: $('#bacteriologa option:selected').text()
         },
@@ -1134,13 +1473,47 @@ function empezarEncuesta() {
         },
         error : function(XMLHttpRequest, textStatus, errorThrown) {
             $('#message').fadeIn(1000);
-            $('#message').removeClass().addClass('error').text('Error al ejecutar la busqueda. Informe a sistemas [#login.clic]').show(500);
+  //          $('#message').removeClass().addClass('error').text('Error al ejecutar la busqueda. Informe a sistemas [#login.clic-empezarEncuesta]').show(500);
             $('#detalleDonante').hide();
 
 
         }
     });
-    showPregunta(0)
+    showPregunta(0);
+
+
+}
+
+function cargarPreguntas(){
+
+   $.ajax({
+
+        
+
+        type : 'POST',
+        url : "../ajax/configEncuesta.php",
+        dataType : 'html',
+        data: {
+            num_ot :  vNumOT , //$('#num_ot').val(),
+            cod_bact: $('#bacteriologa').val(),
+            nom_bact: $('#bacteriologa option:selected').text()
+        },
+        success : function(data){
+
+//            $('#encuesta').submit(); // hacia: det_encuesta.php
+
+        },
+        error : function(XMLHttpRequest, textStatus, errorThrown) {
+            $('#message').fadeIn(1000);
+ //           $('#message').removeClass().addClass('error').text('Error al ejecutar la busqueda. Informe a sistemas [#login.clic-empezarEncuesta]').show(500);
+            $('#detalleDonante').hide();
+
+
+        }
+    });
+ //   showPregunta(0);
+
+
 }
 
 
@@ -1162,6 +1535,7 @@ function grabarEncuesta4D() {
                 encEstado:$('#encEstado').val()
             },
             success:function (data) {
+ console.log("al grabar encuesta 4d "+vDonanteEncuesta.usuario+" "+data);
 
                 switch (data.substring(0, 1)) {
 
@@ -1187,6 +1561,14 @@ function grabarEncuesta4D() {
 
                         // Ocultar un posible aceptar condicional
                         $('#comentarios').hide();
+
+
+                        if (vDonanteEncuesta.usuario =="donante"){
+
+                            document.forms[0].action='../apl/menuDonante.php';//+"?num_ot="+vNumOT;
+                            document.forms[0].submit();
+ 
+                        }
 
 
                         break;
@@ -1217,6 +1599,8 @@ function grabarEncuesta4D() {
 function llenarGenero(){
 	
 }
+
+
 function grabar4D() {
 
 
@@ -1270,3 +1654,125 @@ function grabar4D() {
 
 
 }
+
+
+
+function fBuscarXClave(clave,usuario){
+
+   var i=0;
+    var $posBact =-1;
+    encontrado=0;
+
+    while ((i<vArrBacteriologas.length)&&(encontrado==0)){
+          if (clave==vArrBacteriologas[i].secreto){
+            encontrado = 1;
+            $posBact=i;
+        }
+        i++;
+    }
+
+
+
+    return $posBact;
+
+}
+
+
+function getBacteriologasMovil() {
+
+
+    $('#waiting').show();
+
+    $.ajax({
+        type : 'POST',
+        url : "../ajax/getBacteriologasMovil.php",
+        dataType : 'html',
+        data: {
+
+        },
+        success : function(data){
+
+            $('#waiting').hide();
+
+            var obj = eval('('+data+')');//convierte el texto a JSON
+
+            var cadBact;
+            cadBact = "";//<div data-role='fieldcontain'>";
+
+            cadBact += "<div id='detalleRespBact'  >";
+            cadBact += "<select name='detalleRespBact' id='detalleRespBact' >";
+            cadBact += "<option selected value=''>Bacteriologas</option>";
+            for (var i=0;i<obj.bacteriologas.length;i++){
+                var vBacteriologas = new Bacteriologa();
+                vBacteriologas.codigo = obj.bacteriologas[i]["codigo"];
+                vBacteriologas.nombre = obj.bacteriologas[i]["nombre"];
+                vBacteriologas.secreto = obj.bacteriologas[i]["secreto"];
+                cadBact +=  "<option value=\""+vBacteriologas.codigo+"\">"+vBacteriologas.nombre +"</option>";
+                vArrBacteriologas.push(vBacteriologas);
+            }
+
+            cadBact += "</select>";
+            cadBact += "  </div>";
+            //cadBact += "  </div>";
+
+            $('#detalleRespBact').html(cadBact);
+            $('#detalleRespBact').hide();//no se muestre nunca
+
+            $('#idBactXClave').html(cadBact);
+
+
+        },
+        error : function(XMLHttpRequest, textStatus, errorThrown) {
+            $('#waiting').hide();
+            $('#message').fadeOut(400);
+            $('#message').fadeIn(400);
+            $('#message').removeClass().addClass('error').text('Error al ejecutar la busqueda. Informe a sistemas').show(500);
+            $('#detalleRespBact').hide();
+
+        }
+    });
+
+    return false;
+}
+
+
+function fActualizarVariableSesion(variable , valorVar){
+
+  //  alert("variable "+variable+" valor "+valorVar);
+   $('#waiting').show();
+
+    var $actualizado;
+    $actualizado = 0;
+ 
+    $var1 = variable;
+    $valor = valorVar;
+
+
+    $.ajax({
+        type : 'POST',
+        url : "../ajax/actualizarvarsesion.php",
+        dataType : 'html',
+        data: {
+            nombrevar : $var1 ,
+            valorvar : $valor
+        },
+        success : function(data){
+ //           alert(data);
+            $actualizado = 1;
+        },
+        error : function(XMLHttpRequest, textStatus, errorThrown) {
+            $('#waiting').hide();
+            $('#message').fadeOut(400);
+            $('#message').fadeIn(400);
+            $('#message').removeClass().addClass('error').text('Error al ejecutar la busqueda. Informe a sistemas').show(500);
+            $('#detalleRespBact').hide();
+            $actualizado = -1;
+        }
+    });
+
+
+ // alert(" en xsaaaacccttuaa "+$actualizado);
+
+   return $actualizado;
+}
+

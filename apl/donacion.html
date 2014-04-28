@@ -1,0 +1,515 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <meta http-equiv="Content-type" content="text/html; charset=utf-8" />
+
+        <title>Encuestas Donantes</title>
+
+        <link rel="stylesheet" href="../css/encuestas.css"      type="text/css" media="all" />
+        
+        <script src="../js/jquery-1.8.2.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../js/jquery.alerts.js" type="text/javascript"></script>
+        <link rel="stylesheet" href="../css/jquery.alerts.css"  type="text/css" media="screen" />
+        <script src="../js/encuesta.js" type="text/javascript" ></script>
+        
+    </head>
+
+
+    <body onload="$('#num_ot').focus();">
+
+
+<div data-role="page" id="one">
+
+        <div class="shell">
+
+            <div class="header">
+                <h1 class="logo"><a href="#">las americas laboratorio medico</a></h1>
+            </div>
+
+
+            <div class="main">
+                <h2>Encuestas donantes </h2>
+
+                <div class="center">
+
+                    <div class="heading">
+                        <h3>Datos del Donante</h3>
+                        <div class="cl">&nbsp;</div>
+                        <div class="users">&nbsp;</div>
+                        <div class="cl">&nbsp;</div>
+                    </div>
+
+
+
+                    <form action="det_encuesta.php" method="POST" class="info-form" name="encuesta" id="encuesta">
+
+
+                        <div id="message" style="margin-top: 5px; display: none;"></div>
+
+
+                        <div id="Donante" class="item">
+                            <label for="num_ot">N&uacute;mero de <?php echo $txtLabelOrden ?> :</label>
+
+                            <input type='text'   id='num_ot' name='num_ot' class='normal-field' value='<?php echo $num_ot ?>' />
+
+
+
+                            <input type="button" id="getMenuDonante" class="boton2"  value="Buscar Donante"/>
+                        </div>
+
+
+                        <div id="detalleDonante"></div>
+
+
+                        <div id="bacteriologas" style="margin-top: 5px; display: none;">
+
+                            <div id="Responsable">
+                                <label>Bacteriologa responsable:</label>
+                                <script language="JavaScript">getBacteriologas();</script>
+                                <br/><br/>
+                            </div>
+
+                            <div id="detalleResp"></div>
+                            <br/>
+
+
+                        </div>
+
+                        <div id="divEmpezarEnc" style="display: none;">
+                            <input type="button" class="boton2"  id="empezarEncuesta" value="Empezar encuesta"/>
+                        </div>
+
+                        <div id="divValidarEnc" style="display: none;">
+                            <input type="button" class="boton2"  id="valEncuesta2" value="Validar encuesta"/>
+                        </div>
+
+
+                        <div id="det_encuesta">
+
+                        </div>
+
+
+                        <div class="cl">&nbsp;</div>
+                    </form>
+                </div>
+                <div class="cl">&nbsp;</div>
+
+            </div>
+
+            <div class="bottom-section">
+
+            </div>
+
+
+            <div class="footer">
+                <p class="left">
+                    <a rel="nofollow" href="#">W3C Valid XHTML</a> | <a rel="nofollow" href="#">W3C Valid CSS</a></p>
+                <p>&copy;<?= date("Y") ?>, Laboratorio Médico las Américas Ltda. All rights reserved. </p>
+				<input type='hidden'   id='tipoEncuesta' name='tipoEncuesta' class='normal-field' value='<?php echo $_SESSION["tipo_encuesta"]?>' />
+               <input type='hidden'   id='txtOrden' name='txtOrden' class='normal-field' value='<?php echo $num_ot?>' />
+                <input type='hidden'   id='go' name='go' class='normal-field' value='0' />
+                 <input type='hidden'   id='txtccPac' name='txtccPac' class='normal-field' value='' />
+                          
+            </div>
+
+
+
+
+        </div>
+
+ </div>
+
+
+
+<div id="pagina1" data-role="page" data-theme="c">
+<h2>Ingreso de Demogr&aacute;ficos <?php if ($txtCedula=="") echo "y Examen F&iacute;sico"; else echo ""; ?> </h2>
+<table  width = "98%" >
+    <tr><td>
+
+<div data-role="content" data-theme='d'>
+
+<form id ="formRegistro"  action="grabarBancoRegistro.php" method="POST"  target="_self"   > 
+
+
+    
+
+     
+
+    <div id="txtInfoDonante"></div>
+
+<div id="waiting"></div>
+    <!--    <input type="button"  name="botonBuscarDonante"  value="Buscar" onClick="getInfoDonante();" />
+    -->
+    <table class="DatosBusqueda" width = "98%"  >
+        <tr>
+        <th width="24%">&nbsp;</th>
+        <th width="25%">&nbsp;</th>
+        <th width="24%">&nbsp;</th>
+        <th width="25%">&nbsp;</th>
+        </tr>
+
+
+        <tr class='eFisico'>
+            <td><label for='txtOTbuscar'>Orden</label><input type='text' name='txtOTbuscar' id='txtOTbuscar' value = '' /> </td>
+            <td><label for='txtFechaDesde'>Desde :</label><input type='date' name='txtFechaDesde' id='txtFechaDesde' value = ''/></td>
+            <td><label for='txtFechaHasta'>Hasta :</label><input type='date' name='txtFechaHasta' id='txtFechaHasta' value = ''/></td>  
+            <td><input type='button'  name='botonBuscar'  value='Buscar' onClick='getInfoDonante();' /></td>
+        </tr>
+
+
+        <tr class='eFisico'>
+
+            <td><label for='txtOrden' align='right'>OT :</label></td>
+            <td><input type='text' name='txtOrden' id='txtOrden' value = '' readonly /></td>
+            <td><input type='text' name='txtFecha' id='txtFecha' value = ''  readonly/></td>
+            <td><div id='popOrdenes'></div></td>
+        </tr>
+
+        
+        
+        
+        
+    </table>
+<!--style='opacity:0.4;filter:alpha(opacity=40)'-->         
+<table class="Demograficos" width = "98%"   >
+    <tr>
+    <th width="15%">&nbsp;</th>
+    <th width="34%"></th>
+    <th width="15%">&nbsp;</th>
+    <th width="34%"></th>
+    </tr>
+
+
+    <tr class="eBacteriologaLlenar">
+        <td><label for="txtCodBacteriologa">Cod. Bateriologa:</label></td>
+        <td><div id="txtCodBacteriologa"><input type="password" name="txtCodBacteriologa" id="txtCodBacteriologa" value = ""  /></div></td>
+        <td colspan="2"><div id="detalleRespBact"></td>
+    </tr>
+        
+    <tr class="eDemograficos">
+        <td><label>Cedula:</label></td>
+        <td><div id="txtCedula"><input type="text" name="txtCedula"  id="txtCedula"  value = "<?php echo $txtCedula; ?>" 
+            <?php if ( $_SESSION["usuario_encuesta"]=="donante" ) echo "readonly" ?>
+        /></div></td>
+        <td><label>Nombre :</label></td>
+        <td><div id="txtNombre"><input type="text" id="txtNombre" name="txtNombre"  value = ""  /></div></td>
+    </tr>
+    
+    <tr class="eDemograficos">
+        <td><label>Apellido1 :</label></td>
+        <td><div id="txtApellido1"><input type="text" name="txtApellido1" id="txtApellido1" value = ""  /></div></td>
+        <td><label>Apellido2:</label></td>
+        <td><div id="txtApellido2"><input type="text" name="txtApellido2" id="txtApellido2" value = ""  /></div></td>
+    </tr>
+
+    
+    <tr class="eDemograficos">
+        <td><label>Direccion :</label></td>
+        <td><div id="txtDireccion"><input type="text" name="txtDireccion" id="txtDireccion" value = ""  /></div></td>
+        <td><label>Telefonos :</label></td>
+        <td><div id="txtTelefonos"><input type="text" name="txtTelefonos" id="txtTelefonos" value = ""  /></div></td>
+    </tr>
+        
+    
+    <tr class="eDemograficos">
+        <td><div  id="labelEdad"><label>Edad:</label></div></td>
+        <td>
+            <div data-role="fieldcontain"><fieldset data-role="controlgroup" data-type="horizontal">
+                <div id="poPedad"></div>
+                <label for="poPedadunidad">+</label>
+                <div id="poPedadunidad"></div>  
+                </fieldset>
+            </div>
+        </td>
+        <td><label>Fecha de Nacimiento:</label></td>
+        <td>
+ <!--           <label for="poPedad">Edad</label> -->
+ <!--           
+    <div data-role="fieldcontain"><fieldset data-role="controlgroup" data-type="horizontal">
+        <div id="poPday"></div>
+        <div id="poPmonth"></div>
+        <div id="poPyear"></div>    
+        </fieldset>
+    </div>
+     -->
+            <div id="txtFechaNat"><input type="date" name="txtFechaNat" id="txtFechaNat" value ="" format="yyyy-mm-dd"/></div>
+            
+        </td>
+    </tr>
+
+    <tr class="eDemograficos">
+        <td><label>Genero:</label></td>
+        <td><div id="popGenero"></div>
+        </td>
+            
+    
+        <td colspan="2">
+            <div data-role="fieldcontain"><fieldset data-role="controlgroup" data-type="horizontal">
+                
+                <label for="popGrupoSanguineo">G.Sanguineo:</label>
+                <div id="popGrupoSanguineo"></div>
+                <div id="popRH"></div>  
+                </fieldset>
+            </div>
+            
+        </td>
+    </tr>
+    
+    
+    <tr class="eDemograficos">
+        <td colspan="2"><label for="popEps">EPS</label><div id="popEps"></div></td>
+        <td colspan="2"><label for="txtE_Mail">Email :</label><div id="txtE_Mail"><input type="email" name="txtE_Mail" value = ""/></div></td>
+    </tr>
+    
+    <tr class="eDemograficos">
+
+
+
+        <td><label>Receptor:</label></td>
+        <td><div id="txtReceptor"><input type="text" name="txtReceptor" value = ""/></div></td>
+        <td><label>Observaciones:</label></td>
+        <td><div id="textarea_observaciones"><textarea name="textarea_observaciones" id="textarea_observaciones">
+        </textarea></div></td>
+    </tr>
+<!--    
+-->
+    <tr class="eFisico">
+        <td><label>Tipo de Donacion:</label></td>
+        <td><div id='popTipoDonacion'></div></td>
+        <td colspan="2"><label for="popCategorias">Categoria</label><div id="popCategorias"></div></td>
+    </tr>
+
+    <tr class="eFisico">
+
+
+
+        <td><div id="labelPeso"><label>Peso 50-150kg</label></div></td>
+        <td>
+            <div data-role="fieldcontain"><fieldset data-role="controlgroup" data-type="horizontal">
+                <div id="poPpeso"></div>
+                <label for="poPpesounidad">+</label>
+                <div id="poPpesounidad"></div>  
+                </fieldset>
+            </div>
+
+        </td>
+        
+        <td><div  id="labelTemperatura"><label>Temperatura 36.0-37.5</label></div></td>
+        <td> 
+            <div data-role="fieldcontain"><fieldset data-role="controlgroup" data-type="horizontal">
+                <div id="poPtemperatura" class="dospopups"></div>
+                <label for="poPtemperatura_dec">.</label>
+                <div id="poPtemperatura_dec" class="dospopups"></div>   
+                </fieldset>
+            </div>
+        </td>   
+            
+    </tr>
+
+
+
+    
+    <tr class="eFisico">
+        <td><div id="labelPASistolica"><label>P.A Sistolica 100-150:</label></div></td>
+        <td><div id="poPsistolica"></div><label for="poPsistolicaunidad">+</label><div id="poPsistolicaunidad"></div></td>
+        <td><div  id="labelPADiastolica"><label>P.A Diastolica 60-95</label></div></td>
+        <td><div id="poPdiastolica"></div><label for="poPdiastolicaunidad">+</label><div id="poPdiastolicaunidad"></div></td>
+    </tr>
+    
+    <tr class="eFisico">
+        <td><div id="labelHemoglobina"><label>Hemoglobina (H 13-19 M 12-18)</label></div></td>
+        <td> <fieldset data-role="fieldcontain" data-type="horizontal">
+            <div id="poPhemoglobina"></div><label for="poPhemoglobina_dec">.</label>
+            <div id="poPhemoglobina_dec"></div></fieldset></td>
+        <td><div id="labelHematocrito"><label>Hematocrito (H 41-57 M 38-54)</label></div></td>
+        <td><fieldset data-role="fieldcontain" data-type="horizontal">
+            <div id="poPhematocrito"></div><label for="poPhematocrito_dec">.</label>
+            <div id="poPhematocrito_dec"></div>
+            </fieldset>
+        </td>
+    </tr>
+    
+    <tr class="eFisico">
+        <td><div id="labelFCardiaca"><label>Fecuencia Cardiaca 60-95:</label></div></td>
+        <td><div id="poPfcardiaca"></div><label for="poPfcardiacaunidad">+</label>
+            <div id="poPfcardiacaunidad"></div></td>
+        <td><label>Reaccion:</label></td>
+        <td><div id="popReacciones"></div></td>
+    </tr>
+    
+    <tr class="eFisico">
+        <td><label>Comentario Examen Fisico:</label></td>
+        <td colspan="3"><div id="textarea_comentaFisico"><textarea name="textarea_comentaFisico" id="textarea_comentaFisico"></textarea></div></td>
+    </tr>
+    <!--<tr class="eFisico">
+        textarea_reaccion 
+
+        <td colspan="3"><div id="popRespComponentes"></div></td>
+        <td><div id="popNomComponentes"><input type="text" name="popNomComponentes" id="popNomComponentes" value = "" readonly /></div></td>
+    </tr>
+-->
+
+
+    <tr class="eFisico" >
+        <td><label for="idEncuestaTxt">Encuesta</label><div id="idEncuestaTxt">
+            <input type="text" name="idEncuestaTxt" id="idEncuestaTxt" value = "PE" readonly /></div></td>
+        <td><label for="idPerfilTxt">Perfil</label>
+            <div id="idPerfilTxt">
+            <input type="text" name="idPerfilTxt" id="idPerfilTxt" value = "PE" readonly />
+        </div></td>
+        <td><label for="idFenotipoTxt">Fenotipo</label><div id="idFenotipoTxt">
+            <input type="text" name="idFenotipoTxt" id="idFenotipoTxt" value = "PE" readonly /></div></td>
+        <td><label for="idEFisicoTxt">E. Fisico</label><div id="idEFisicoTxt">
+            <input type="text" name="idEFisicoTxt" id="idEFisicoTxt" value = "PE" readonly /></div></td>
+    </tr>
+    <tr class="eFisico">
+
+    </tr>
+
+
+
+
+    <tr class="eDemograficos">
+        <!--
+        <td><input type="button"  name="bIrEncuesta"  value="Llenar Encuesta" onClick="irAEncuesta();" />
+            <input type="button"  name="bIrEncuestaPos"  value="Encuesta Pos" onClick="irAEncuestaPosDonacion();" />
+        </td>
+        <td><input type="button"  name="botonInicializar"  value="Inicializar" onClick="inicializarCampos();" /></td>
+        <td><input type="button"  name="botoningresarDonate"  value="Grabar Donante" onClick="grabarDonante();" /></td>
+        <td ><input type="button" id="bOcultarEFisico" name="bOcultarEFisico"  value="Ocultar/Mostrar" onclick="ocultarExamenFisico();" /></td>
+    -->
+    
+   </tr>
+
+</table>
+
+
+
+
+        <div id="message" style="margin-top: 5px; display: none;"></div>
+
+         <!-- <div id="infoComponentes" class="dialogo"></div>
+
+        
+
+        <label for="slider_pasistolica">P.A Sistolica:</label>
+           <input type="range" name="slider_pasistolica" id="slider_pasistolica" value="100" min="0" max="300"  />
+        -->
+
+
+<!--
+<div id="dialogo" title="Encuesta"  data-rel="dialog">
+   <p>Esta es la caja de diálogo más básica, que se puede redimensionar y arrastrar a otra posición. Además, se puede cerrar con el icono del aspa "X" que aparece en el titular de la caja.</p>
+</div>
+
+
+
+
+
+
+
+
+<input type="button" id="getDonante" class="boton2" onclick="myFunction(document.getElementById('txtNro_Consecutivo').value)" value="Buscar Donante"/>
+-->
+<div id="message" style="margin-top: 5px; display: none;"></div>
+<div id="waiting" style="margin-top: 5px; display: none;"></div>
+
+<input type='hidden'   id='tipoencuesta' name='tipoencuesta' class='normal-field' value='0' />
+<!-- <input type='hidden'   id='tipoencuesta' name='tipoencuesta' class='normal-field' value='<?php echo $_SESSION["tipo_encuesta"]?>' />
+-->
+<input type='hidden'   id='usuarioencuesta' name='usuarioencuesta' class='normal-field' value='<?php echo $_SESSION["usuario_encuesta"] ?>' />
+<input type='hidden'   id='cc_paciente' name='cc_paciente' class='normal-field' value='<?php echo $_SESSION["num_cc"] ?>' />
+<input type='hidden'   id='num_ot' name='num_ot' class='normal-field' value='' />
+
+
+                 <input type='hidden'   id='go' name='go' class='normal-field' value='0' />
+
+
+
+<table>
+    <tr>
+    <th width="15%">&nbsp;</th>
+    <th width="35%"></th>
+    <th width="15%">&nbsp;</th>
+    <th width="35%"></th>
+    </tr>
+    
+</table>
+
+</div>
+
+</form>
+
+     <div data-role="footer" data-theme='b' class="footer" data-position="fixed" >
+        <table class="Demograficos">
+
+        <!--        <td><a href="#pagina2" data-rel="dialog" data-role="button">Mostrar Encuesta</a></td>
+    
+                <td><input type="button"  name="botonCancelar"  value="Salir" onClick="cancelarDonante();" /></td>  -->
+     
+            <!--
+                <td><input type="button" id="bExamenFisico" name="bExamenFisico"  value="Ocultar E.Fisico" onclick="ocultarExamenFisico();" /></td>
+            -->
+
+
+
+
+            <?php if ($_SESSION["usuario_encuesta"]=="donante"){
+                echo <<< HTML
+            <tr class="eDemograficos" >
+
+        
+
+
+
+                <td><input type="button"  name="bIrEncuesta"  value="Menu Ppal" onClick="irAMenuPpal();" /></td>
+                <td><input type="button"  name="botonInicializar"  value="Inicializar" onClick="inicializarCampos();" /></td>
+                <td colspan="2"><input type="button"  name="botoningresarDonate"  value="Grabar Donante" onClick="grabarDonante();" /></td>
+            </tr>
+
+HTML;
+            }
+
+            else{
+echo <<< HTML
+            <tr class="eBacteriologaLlenar" >
+                <td><input type="button"  name="bIrEncuesta"  value="Menu Ppal" onClick="irAMenuPpal();" /></td>
+                <td><input type="button"  name="botonInicializar"  value="Inicializar" onClick="inicializarCampos();" /></td>
+                <td colspan="2"><input type="button"  name="botoningresarDonate"  value="Grabar Donante" onClick="grabarDonante();" /></td>
+                <!--<td><input type="button" id="bOcultarEFisico" name="bOcultarEFisico"  value="Ocultar/Mostrar" onclick="ocultarExamenFisico();" /></td>
+            <td><input type="button"  name="bIrEncuestaPos"  value="Encuesta Pos" onClick="irAEncuestaPosDonacion();" /></td>
+            -->
+            </tr>
+HTML;
+
+
+
+
+            } ?>
+
+    
+            <tr class="eBacteriologaLlenar" >
+                <td><input type="button" id="botonEncuesta" name="botonEncuesta"  value="Mostrar Encuesta" onclick="showDialog();" /></td>
+                <td><input type="button" id="bComponentes" name="bComponentes"  value="Componentes" onclick="showComponentes();" /></td>
+                <td><input type="button" id="bCodigoBarras" name="bCodigoBarras"  value="Cod.Barras" onclick="imprimirCodBarras();" />  </td>     
+                <td><input type="button" id="bCorregirCedula" name="bCorregirCedula"  value="Corregir Cedula" onclick="corregirCedula();" />  </td> 
+                <td><input type="button" id="bOcultarEFisico" name="bOcultarEFisico"  value="Ocultar/Mostrar" onclick="ocultarExamenFisico();" /></td>
+
+            </tr>
+
+            
+    
+
+        </table>
+
+    </div>
+    <!-- una gran tabla es la ventana -->
+    </td></tr>
+</table>
+
+</div> <!-- pagina 1 -->
+
+
+
+        
+    </body>
+</html>

@@ -2,10 +2,10 @@
 // -------------------------------------------------------------------------------------
 // Validar que el usuario haya pasado por login y haya digitado una ot valida
 // -------------------------------------------------------------------------------------
-
+@session_start();//29 oct 2013
 
 if (!isset($_SESSION['encOtDon'])) {
-    include '../apl/login.php';
+    include '../../dona.html';//'../apl/login.php';
     die;
 }
 

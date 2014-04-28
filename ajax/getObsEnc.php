@@ -1,4 +1,5 @@
 <?php
+@session_start();//29 oct 2013
 
 include_once("../class/FourDimensionAccess.php");
 $parameters = array();

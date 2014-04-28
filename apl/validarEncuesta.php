@@ -4,8 +4,16 @@
 // -------------------------------------------------------------------------------------
 
 if (!isset($_POST['num_ot'])) {
-include '../apl/login.php';
+include '../../dona.html';//'../apl/login.php';
 die;
+}
+
+if (isset($_POST['tipoencuesta'])) {//si viene de la ventana de demograficos .
+    if ($_SESSION['tipo_encuesta'] != $_POST['tipoencuesta']){
+         $_SESSION['tipo_encuesta'] = $_POST['tipoencuesta'];  
+    }
+   
+
 }
 
 $num_ot = $_POST['num_ot'];
@@ -34,7 +42,7 @@ $rec = $db->get_row($sql);
 
 //if (!isset($rec->Nombre)) {
 if ( ($regPregEnc->cuenta == $regMvtoEnc->cuenta) && (!isset($rec->Nombre)) ) {//si todas las preguntas estan validadas .
-include '../apl/login.php';
+include '../../dona.html';//'../apl/login.php';
 die;
 }
 ?>
@@ -98,14 +106,45 @@ die;
 								if ($_SESSION["tipo_encuesta"] !="0"){//firma post donacion
 									$sufijo="P";
 								}
-								if ($sufijo=="P"){//deben existir 2 firmas
-	 								$html_object = "<img src='../firmas/".$_POST['num_ot'].".png' width='50%' height='320'/><img src='../firmas/".$_POST['num_ot'].$sufijo.".png' width='50%' height='320'/>" ;
-									
-								} else {
-	 								$html_object = "<img src='../firmas/".$_POST['num_ot'].$sufijo.".png' width='100%' height='320'/>" ;
-									
-								}
+
+
+                                $nomArchivoEncuesta = "../firmas/".$_POST['num_ot'].".png" ;
+                                $nomArchivoPostDonacion = "../firmas/".$_POST['num_ot'].$sufijo.".png" ;
+                                if ($sufijo== "P"){ 
+                                        $vTxtImg = "";
+                                        if (file_exists($nomArchivoEncuesta)) {
+                                            
+                                            $html_object = "Encuesta Fecha y Hora: " . date("F d Y H:i:s.", filectime($nomArchivoEncuesta));
+                                            $html_object .= "<img src='".$nomArchivoEncuesta."' width='100%' height='320' alt='Pre-donacion' />";
+                                       }else {
+                                            $html_object = "Falta la firma en la encuesta</label>";  
+                                        }
+                                        $nombre_archivo = $nomArchivoPostDonacion;
+                                        if (file_exists($nomArchivoPostDonacion)) {
+                                            $html_object .= "- Post Donacion Fecha y Hora: " . date("F d Y H:i:s.", filectime($nomArchivoPostDonacion));
+                                            $html_object .= "<img src='".$nomArchivoPostDonacion."' width='100%' height='320' alt='Post-donacion'/>";
+                                       }else {
+                                            $html_object .= "- Falta la firma post donacion</label>";  
+                                        }
+
+                                }else{
+                                        $nombre_archivo = $nomArchivoEncuesta;
+                                        if (file_exists($nomArchivoEncuesta)) {
+                                            $html_object = "Encuesta Fecha y Hora: " . date("F d Y H:i:s.", filectime($nomArchivoEncuesta));
+                                            $html_object .="<img src='".$nomArchivoEncuesta."' width='99%' height='320' alt='Post-donacion' border='1'/>";
+                                         }else {
+                                            $html_object = "Falta la firma en la encuesta ";  
+                                        }
+
+                                }
+                                //$html_object = $vTxtImg.$html_object;
+     
+
+
+ 
 							?>	
+
+
                             <?php echo $html_object ?>
                         </div>
 
@@ -170,6 +209,7 @@ die;
                             <img src="../css/images/ajax-loader.gif" title="Loader" alt="Loader"/>
                         </div>
                         <input type="hidden" id="encEstado" name="encEstado" value="<?= $estado ?>"/>
+   <input type='hidden'   id='tipoEncuesta' name='tipoEncuesta' class='normal-field' value='<?php echo $_SESSION["tipo_encuesta"]?>' />
 
                         <div id="divGrabarEnc" style="margin-top: 10px">
                             <input type="button" class="boton2"  id="grabarEnc" value="Grabar Encuesta"/>
@@ -178,7 +218,9 @@ die;
                         <div id="erroresEnc" class="error" style="display: none;" ></div>
 
                         <div id="divNuevaEnc" style="display: none; margin-top: 10px">
-                            <input type="button" class="boton2"  id="nuevaEnc"  onClick="nuevaEncuesta()" value="Nueva Encuesta"/>
+                            <input type="button" class="boton2"  id="nuevaEnc"  onClick="nuevaEncuesta();" value="Nuevo Donante"/>
+
+
                         </div>
 
                         <div class="cl">&nbsp;</div>

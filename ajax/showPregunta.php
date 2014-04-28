@@ -4,7 +4,9 @@
 // buscar y mostrar la siguiente pregunta o al codigo de la pregunta que se le asigne manualmente
 // en el URL
 //
+@session_start();//29 oct 2013
 $num_ot = $_POST['num_ot'];
+
 
 if (isset($_POST['go'])) {
     $key = array_search($_POST['go'], $_SESSION[$num_ot]['codigos_pre']);
@@ -14,7 +16,7 @@ if (isset($_POST['go'])) {
         $key = array_search($_SESSION[$num_ot]['cod_next'], $_SESSION[$num_ot]['codigos_pre']);
 
     } else {
-        $key = 1;
+        $key = 1;//1
     }
 }
 

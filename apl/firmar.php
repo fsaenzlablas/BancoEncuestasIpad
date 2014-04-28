@@ -4,10 +4,14 @@
 //
 // ------------------------------------------------------------------------
 
+@session_start();//29 oct 2013
 
 if (!isset($_POST['num_ot'])) {
-    include_once('../apl/login.php');
+    include_once('../../dona.html');//'../apl/login.php');
     die();
+}
+if (isset($_POST['tipoEncuesta'])) {
+    $_SESSION['tipo_encuesta'] = $_POST['tipoEncuesta']; 
 }
 
 
@@ -16,6 +20,7 @@ if (!isset($_POST['num_ot'])) {
 <!DOCTYPE html>
 <html lang="en" manifest="cache.manifest">
 <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <META HTTP-EQUIV="Cache-Control" CONTENT="no-cache, must-revalidate">
 
@@ -42,10 +47,13 @@ if (!isset($_POST['num_ot'])) {
 
 <div class="shell">
 
-
+ <!-- 
     <div class="header">
-        <h1 class="logo"><a href="#">Laboratorio Medico las Americas</a></h1>
+      <h1 class="logo"><a href="#">Laboratorio Medico las Americas</a></h1> 
+
     </div>
+
+    -->
     <div class="main">
 
         <div class="heading" id="formTitle">
@@ -58,33 +66,38 @@ if (!isset($_POST['num_ot'])) {
         </div>
 
 
-        <form method="post" action="../apl/revisarRespuestas.php" id="signatureForm">
+       <form method="post" action="../apl/revisarRespuestas.php" id="signatureForm"> 
+ 
 
 
             <input type='hidden' id='num_ot' name='num_ot' value='<?php echo $_POST['num_ot']?>'>
             <input type='hidden' id='firma_donante' name='firma_donante' value=''>
 
             <div id="divMensaje" class="alert">
-                Por favor firme con el dedo sobre el fondo amarillo y luego presione el bot&oacute;n <strong>Revisar
-                Respuestas</strong>
+                Por favor firme con el dedo sobre el fondo amarillo y luego presione el bot&oacute;n <strong>Grabar
+                Firma</strong>
             </div>
 
             <canvas class="canvas" name="canvas"  id="canvas" width="955px" height="315px"></canvas>
 
             <input type="hidden" id="output" name="output" class="output">
+    <input type='hidden'   id='tipoEncuesta' name='tipoEncuesta' class='normal-field' value='<?php echo $_SESSION["tipo_encuesta"]?>' />
 
             <hr/>
+
+
             <div class="buttons">
 
                 <div id="divBorrarFirma">
-                    <input type="button" class="clearButton" id="clear" style="float:left;" id="borrarFirma" value="Borrar Firma"/>
+                    <input type="button" class="clearButton" data-theme="b" id="clear" style="float:left;" id="borrarFirma" value="Borrar Firma"/>
                 </div>
 
                 <div id="divRevisarResp">
-                    <input type="button" class="boton2" style="float:right;" value="Revisar Respuestas" id="revisarResp"/>
+                    <input type="button" class="boton2" data-theme="b" style="float:right;" value="Grabar Firma" id="revisarResp"/>
                 </div>
 
             </div>
+
         </form>
 
 
@@ -116,14 +129,8 @@ if (!isset($_POST['num_ot'])) {
 
     </div>
 
-    <div class="footer">
-        <p class="left">
-            <a rel="nofollow" href="#">W3C Valid XHTML</a> | <a rel="nofollow" href="#">W3C Valid CSS</a>
-        </p>
 
-        <p>&copy;<?=date("Y")?>, Laboratorio M&eacute;dico las Am&eacute;ricas Ltda. All rights reserved. </p>
 
-    </div>
 
 </div>
 

@@ -1,4 +1,5 @@
 <?php
+@session_start();//29 oct 2013
 
 date_default_timezone_set("America/Bogota");
 include_once "../lib/shared/ez_sql_core.php";

@@ -17,7 +17,7 @@ class FourDimensionAccess {
     private $server4D;
     private $client;
 
-    function __construct($ipAddress="131.1.18.106", $port="8083") {
+    function __construct($ipAddress="131.1.18.6", $port="8083") {
     //function __construct($ipAddress="131.1.18.103", $port="8081") {
 
         $this->ipAddress = $ipAddress;

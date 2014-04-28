@@ -1,4 +1,5 @@
 <?php
+@session_start();//29 oct 2013
 
 for ($i = 0; $i < sizeof($_SESSION['secuencias']); $i++) {
     $htmlCode = "<br>";

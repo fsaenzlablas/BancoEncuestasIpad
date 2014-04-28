@@ -1,5 +1,5 @@
 <?php
-
+@session_start();
 // ------------------------------------------------------------------------
 // Programa: getBacteriologas.php
 //
@@ -29,9 +29,10 @@ if ($users = $db->get_results($sql, ARRAY_A)) {
     $i=0;
     foreach ($users as $user) {
         $i++;
+        $vNomBact = htmlentities($user['nombre'], ENT_COMPAT);
         $cadbact.=" { ";
         $cadbact.=$comilla2."codigo".$comilla2." : ".$comilla2.$user['codigo'].$comilla2;
-        $cadbact.=$c.$comilla2."nombre".$comilla2.": ".$comilla2.$user['nombre'].$comilla2;
+        $cadbact.=$c.$comilla2."nombre".$comilla2.": ".$comilla2.$vNomBact.$comilla2;
         $cadbact.=$c.$comilla2."secreto".$comilla2.": ".$comilla2.$user['secreto'].$comilla2;
         $cadbact.=" } ";
         if ($i<$numItems){

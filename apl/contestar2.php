@@ -4,7 +4,7 @@
  * Sirve para hacer debugger
  */
 
-
+@session_start();//29 oct 2013
  for ($i = 0; $i < sizeof($_SESSION['rdonante']); $i++) {
 
      if ($_SESSION['tipos'][$i]=="SI-NO") {

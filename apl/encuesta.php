@@ -1,8 +1,33 @@
 <?php
-if (!isset($_SESSION['usuario_encuesta'])) {
-    include('../apl/login.php');
+
+@session_start();//29 oct 2013
+  if (!isset($_SESSION['usuario_encuesta'])) {
+
+    include('../../dona.html');//'../apl/login.php');
     die;
 }
+
+
+$num_ot="";
+
+if (isset($_POST['txtOrden'])) {//si viene de la ventana de demograficos .
+    $num_ot = $_POST['txtOrden'];
+    //$('#num_ot').val($num_ot);
+
+}
+if (isset($_POST['tipoencuesta'])) {//si viene de la ventana de demograficos .
+    if ($_SESSION['tipo_encuesta'] != $_POST['tipoencuesta']){
+         $_SESSION['tipo_encuesta'] = $_POST['tipoencuesta'];  
+    }
+   
+
+  //  $_SESSION["tipo_encuesta"] = $_POST['tipoencuesta'];
+    //$('#num_ot').val($num_ot);
+  //  unset($_POST['tipoencuesta']);
+}
+
+
+
 ?>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -55,7 +80,7 @@ if (!isset($_SESSION['usuario_encuesta'])) {
                         <div id="Donante" class="item">
                             <label for="num_ot">Numero OT Donante:</label>
 
-                            <input type='text'   id='num_ot' name='num_ot' class='normal-field' value='' />
+                            <input type='text'   id='num_ot' name='num_ot' class='normal-field' value='<?php echo $num_ot ?>' />
 
 
 
@@ -111,7 +136,8 @@ if (!isset($_SESSION['usuario_encuesta'])) {
                     <a rel="nofollow" href="#">W3C Valid XHTML</a> | <a rel="nofollow" href="#">W3C Valid CSS</a></p>
                 <p>&copy;<?= date("Y") ?>, Laboratorio Médico las Américas Ltda. All rights reserved. </p>
 				<input type='hidden'   id='tipoEncuesta' name='tipoEncuesta' class='normal-field' value='<?php echo $_SESSION["tipo_encuesta"]?>' />
-                            
+                <input type='hidden'   id='txtOrden' name='txtOrden' class='normal-field' value='<?php echo $num_ot?>' />
+                           
             </div>
 
 

@@ -11,6 +11,8 @@
 // buscar y mostrar la siguiente pregunta o al codigo de la pregunta que se le asigne manualmente
 // en el URL
 //
+@session_start();//29 oct 2013
+
 $num_ot = $_POST['num_ot'];
 
 if (isset($_POST['go'])) {

@@ -1,0 +1,17 @@
+Encuestas version 1
+
+git add <files>
+
+Para hacer commit desde el sh:
+git commit -m "Commit Message" -a
+
+Para hacer Push a bitbucket.org: (password Azte-)
+
+git push https://jaimealvarezv@bitbucket.org/jaimealvarezv/bancoencuestas.git
+
+
+Para hacer Push a GitHub.com
+git commit -m "Commit Message" -a
+git push https://github.com/LMLA/BancoEncuestas.git
+username: jalvarezlablas
+password: jaime123

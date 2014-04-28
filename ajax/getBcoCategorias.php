@@ -20,9 +20,9 @@ $sql = "SELECT * FROM banco_categorias ORDER BY codigo;";//descripcion
 
 if ($users = $db->get_results($sql, ARRAY_A)) {
     foreach ($users as $user) {
-        array_push($codigos_bact, $user['codigo']);
+         array_push($codigos_bact, $user['codigo']);
         array_push($nombres_bact, htmlentities($user['descripcion'], ENT_COMPAT));
-    }
+     }
 
     array_multisort($nombres_bact, $codigos_bact);
 }

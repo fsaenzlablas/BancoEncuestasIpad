@@ -16,13 +16,19 @@ if (!isset($_SESSION['usuario_encuesta'])) {
 		
         
         
-        <script src="../js/jquery-1.8.2.min.js" type="text/javascript" charset="utf-8"></script>
-        <script src="../js/jquery.alerts.js" type="text/javascript"></script>
+        <script src="../js/jquery-1.9.1.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../js/jquery-ui-1.10.3.custom.js" type="text/javascript" charset="utf-8"></script>
+        
+       <script src="../js/jquery.alerts.js" type="text/javascript"></script>
         <link rel="stylesheet" href="../css/jquery.alerts.css"  type="text/css" media="screen" />
 
         <script src="../js/formulariocompleto.js" type="text/javascript" ></script>
 
 <!-- 
+
+	       <script src="../js/jquery-1.8.2.min.js" type="text/javascript" charset="utf-8"></script>
+
+
 		<link rel="stylesheet" href="http://code.jquery.com/mobile/1.2.1/jquery.mobile-1.2.1.min.css" />
 			<script src="http://code.jquery.com/jquery-1.8.2.min.js"></script>
 			<script src="http://code.jquery.com/mobile/1.2.1/jquery.mobile-1.2.1.min.js"></script>

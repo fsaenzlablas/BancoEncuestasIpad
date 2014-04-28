@@ -1,4 +1,6 @@
 <?php
+@session_start();//29 oct 2013
+
 $firma = $_POST['firma_donante'];
 $num_ot=$_POST['num_ot'];
 
@@ -22,7 +24,7 @@ unlink($file);
 file_put_contents($file, base64_decode($uri));
 $tam=filesize($file);
 
-if (filesize($file)<3000){
+if (filesize($file)<10000){//estaba en 3000 que permite firmas en blanco.
     // Retornar FAIL (fallo) = que indica que la firma es demasiado corta.
     die("FAIL");
 } else {

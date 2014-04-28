@@ -20,7 +20,8 @@ if ($_SERVER["SERVER_NAME"] == '131.1.18.103') {
     define("EZSQL_DB_USER", "root");  // <-- mysql db user
     define("EZSQL_DB_PASSWORD", "LavAmerikx09");  // <-- mysql db password
     define("EZSQL_DB_NAME", "4dlab_dllo");  // <-- mysql db pname
-   define("EZSQL_DB_HOST", "localhost"); // <-- mysql server host
+ //  define("EZSQL_DB_HOST", "localhost"); // <-- mysql server host
+  define("EZSQL_DB_HOST", "131.1.18.103"); // <-- mysql server host
 }
 
 // ==================================================================

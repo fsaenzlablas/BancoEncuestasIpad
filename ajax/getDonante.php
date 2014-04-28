@@ -1,4 +1,5 @@
 <?php
+@session_start();//29 oct 2013
 
 // ------------------------------------------------------------------------
 // Programa: getDonante.php
@@ -12,6 +13,7 @@
 // ------------------------------------------------------------------------
 // Incluir bibliotecas y clases necesarias
 // ------------------------------------------------------------------------
+date_default_timezone_set('America/Bogota');
 
 include_once "../lib/shared/ez_sql_core.php";
 include_once("../lib/ez_sql_mysql.php");
@@ -26,7 +28,11 @@ $db = new ezSQL_mysql(EZSQL_DB_USER, EZSQL_DB_PASSWORD, EZSQL_DB_NAME, EZSQL_DB_
 $tipoenconfigencuesta =intval( $_SESSION["tipo_encuesta"]) ;
 //
 
+$hoy = date("Y-m-d");  
+
 $donante = $_POST['num_ot'];
+
+
 if ((sizeof ($_SESSION[$donante]) > 0) && ($tipoenconfigencuesta==0)) {
     die("4|<div class='error'>ESE N&Uacute;MERO DE OT ESTA SIENDO CONTESTADO EN OTRA PESTA&Ntilde;A DEL MISMO NAVEGADOR $tipoenconfigencuesta</div>");
 }
@@ -39,12 +45,27 @@ if ($donante != "") {
     // Verificar que la encuesta no esta siendo contestada en este momento.
     // ------------------------------------------------------------------------
 
+    $sqlDonanteHoy = "SELECT * FROM banco_encuesta_enc_tmp e  WHERE  e.nro_consecutivo = '$donante' OR ( e.cedula ='$donante' AND e.fecha = '$hoy' ) ";
+    $recDonanteHoy = $db->get_row($sqlDonanteHoy);
+   if (isset($recDonanteHoy->nro_consecutivo)) {
+        if ($donante != $recDonanteHoy->nro_consecutivo){
+            $donante = $recDonanteHoy->nro_consecutivo;
+               //    die("9|$donante");
+
+            $_SESSION[$donante]['encOtDon'] = $donante;
+        }
+
+        
+  }
+
+
     $sql = "SELECT * FROM banco_encuesta_enc_tmp e  WHERE e.Nro_Consecutivo = '$donante' AND e.Observaciones='EN PROCESO'";
+   
     $rec = $db->get_row($sql);
 
     // Atencion nombre con MINUSCULAS
     if (isset($rec->nombre)) {
-        die("3|<div class='error'>LA ENCUESTA ESTA SIENDO CONTESTADA EN OTRO IPAD</div>");
+        die("3|<div class='error'>LA ENCUESTA ESTA SIENDO CONTESTADA EN OTRO IPAD $donante</div>");
     }
 
     // ------------------------------------------------------------------------
@@ -52,7 +73,8 @@ if ($donante != "") {
     // debe informar al usuario.
     // ------------------------------------------------------------------------
 	$sqlNumPregEnc = "SELECT COUNT(*) as cuenta FROM  banco_encuesta b WHERE  b.activa =1 ";
-	$sqlNumMvtoEnc = "SELECT COUNT(*) as cuenta FROM  banco_mvto_encuesta b WHERE  b.nro_consecutivo = '$donante' ";
+	//$sqlNumMvtoEnc = "SELECT COUNT(*) as cuenta FROM  banco_mvto_encuesta b WHERE  b.nro_consecutivo = '$donante' ";
+    $sqlNumMvtoEnc = "SELECT COUNT(*) as cuenta FROM  banco_mvto_encuesta b WHERE  b.nro_consecutivo = '$donante' ";
 
 //Todas las preguntas activas deben estar validadas
 $regPregEnc = $db->get_row($sqlNumPregEnc);
@@ -76,13 +98,13 @@ $vNumMvtoEnc = $regMvtoEnc->cuenta;
     // ------------------------------------------------------------------------
 
     $sql = "SELECT * FROM banco_encuesta_enc_tmp e  WHERE e.Nro_Consecutivo = '$donante' AND e.Observaciones='SIN CONFIRMAR'";
-    $rec = $db->get_row($sql);
+ $rec = $db->get_row($sql);
 
     // Atencion nombre con MINUSCULAS
     if ((isset($rec->nombre)) && ($tipoenconfigencuesta==0)){
         $bresp = $rec->cod_bacteriologa;
 
-       $sql = "SELECT * FROM banco_registro r  WHERE  r.Nro_Consecutivo = '$donante'  AND r.Encuesta = 'PE' ";
+       $sql = "SELECT * FROM banco_registro r  WHERE r.Nro_Consecutivo = '$donante'   AND r.Encuesta = 'PE' ";
         $rec = $db->get_row($sql);
 
         if (isset($rec->Nombre)) {
@@ -201,7 +223,7 @@ $vNumMvtoEnc = $regMvtoEnc->cuenta;
 
 	
    $sql = "SELECT * FROM banco_registro r  WHERE r.Nro_Consecutivo = '$donante' AND r.Encuesta <> 'PE'";
-
+ 
     $rec = $db->get_row($sql);
 
     if (isset($rec->Nombre)) {
@@ -213,7 +235,7 @@ $vNumMvtoEnc = $regMvtoEnc->cuenta;
     // ------------------------------------------------------------------------
 
     
-    $htmlCode="<div class='error'>NUMERO DE DONANTE NO EXISTE.</div>";
+    $htmlCode="<div class='error'>NUMERO DE DONANTE NO EXISTE. </div>";
     die("0|$htmlCode");
     
 }
